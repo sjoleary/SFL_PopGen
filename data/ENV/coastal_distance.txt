@@ -1,0 +1,10 @@
+Estuary	Paramater	Value
+SanAntonioBay	Coastal Distance	0
+MatagordaBay	Coastal Distance	55
+GalvestonBay	Coastal Distance	235
+SabineLake	Coastal Distance	323
+BaratariaBay	Coastal Distance	797
+WestMississippiSound	Coastal Distance	1142
+EastMississippiSound	Coastal Distance	1215
+MobileBay	Coastal Distance	1252
+ApalachicolaBay	Coastal Distance	1596

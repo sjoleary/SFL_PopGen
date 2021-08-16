@@ -1,0 +1,621 @@
+OCEAN	REGION1	REGION	POP	ESTUARY	SITE	SAMPLE_ID	LAT	LONG	SEX	WEIGHT	SL	TL	YEAR	MONTH	DAY	FIELD_ID	SAMPLER	COUNTRY	STATE	MAJORAREA	MINORBAY	STATION	SHALLOWDEPTH	DEEPWATERDEPTH	TEMP	DO	SALINITY	TURBIDITY
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-00047	32.81	-79.97	U		220	274	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-00053	32.81	-79.97	U		355	430	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-00058	32.8	-79.97	U		284	347	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-00073	32.83	-79.98	U		181	239	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-00194	32.83	-80.02	U		405	484	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-00218	32.81	-79.96	U		150	190	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-01254	32.81	-79.96	U	791		390	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-01287	32.81	-79.96	U	363		321	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-01646	32.83	-80	U	35	124	152	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	AshleyRiver	Ple-01656	32.8	-79.97	U	182	210	258	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-00013	32.77	-79.86	U		245	310	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-00472	32.75	-79.9	U	966	377	454	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-00617	32.76	-79.94	U	679	326	388	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-00619	32.77	-79.86	U	225	223	274	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-00764	32.75	-79.9	U		431	510	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-01160	32.78	-79.92	U	579		368	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-01166	32.78	-79.91	U	410		342	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-01197	32.78	-79.88	U			428	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-01356	32.76	-79.88	U	1323		476	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CharlestonHarbor	Ple-01774	32.76	-79.94	U	48	133	163	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-00597	32.98	-79.91	U	159	193	238	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-00598	32.97	-79.91	U	481	279	342	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-00599	32.98	-79.92	U	289	240	292	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-00675	32.98	-79.92	U	647	323	395	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-01817	32.91	-79.95	U		315	387	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-01830	32.83	-79.94	U	1304	402	486	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-01831	32.84	-79.95	U	908	349	426	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-01832	32.83	-79.94	U	882	357	432	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-01833	32.83	-79.94	U	464	291	352	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	CooperRiver	Ple-01860	32.98	-79.91	U	1480	412	492	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullIsland	Ple-00509	32.8	-79.79	U		337	410	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullIsland	Ple-00521	32.82	-79.73	U		335	412	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullIsland	Ple-00522	32.82	-79.73	U		349	420	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00974	32.87	-79.65	U		283	343	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00975	32.87	-79.65	U		303	373	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00976	32.87	-79.65	U		292	352	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00977	32.87	-79.65	U		283	343	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00978	32.87	-79.65	U		337	407	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00979	32.87	-79.65	U		338	408	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	IOPtoBullsIsland	Ple-00980	32.87	-79.65	U		322	383	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00089	32.85	-79.89	U		237	293	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00112	32.87	-79.86	U		207	259	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00129	32.87	-79.86	U		265	325	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00439	32.84	-79.89	U	607	318	385	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00528	32.85	-79.89	U	776	336	414	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00624	32.84	-79.89	U	1169	377	454	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00724	32.84	-79.89	U	230	227	276	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-00846	32.84	-79.89	U	39	126	158	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-01615	32.85	-79.89	U	98	175	214	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	CharlestonHarbor	WandoRiver	Ple-01682	32.85	-79.89	U	504	291	357	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-00530	33.02	-79.39	U	159	197	243	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-00808	33.04	-79.36	U	60	148	182	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-00938	33.02	-79.37	U	278	244	304	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01136	33.02	-79.37	U	47		179	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01321	33.06	-79.41	U	583		380	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01416	33.07	-79.42	U	409	278	340	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01533	33.02	-79.37	U	1126	381	460	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01703	33.03	-79.38	U	192	222	272	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01846	33.07	-79.42	U	816	338	407	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	SanteeRivers	CapeRomain	Ple-01868	33.07	-79.42	U	1026	365	440	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-00178	32.52	-80.51	U		138	164	1998				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-00646	32.51	-80.44	U	279	245	300	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-00807	32.51	-80.44	U	99	168	209	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-00841	32.5	-80.43	U	3620	427	511	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-00921	32.51	-80.44	U	464	284	347	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-01380	32.5	-80.43	U	220	232	281	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-01564	32.5	-80.43	U	166	202	248	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-01588	32.49	-80.42	U	690	318	388	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-01629	32.5	-80.45	U	848	342	415	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	StHelenSound	AceBasin	Ple-01679	32.51	-80.41	U	117	178	223	2014				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01193	32.67	-80	U			438	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01194	32.67	-80	U			416	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01195	32.67	-80	U			365	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01272	32.65	-80.02	U			465	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01275	32.65	-80.02	U			376	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01276	32.65	-80.02	U			441	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01385	32.63	-80.06	U		392	477	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01667	32.63	-80.31	U	83	164	198	2014				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01668	32.63	-80.31	U	103	185	215	2014				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	Stono-NorthEdistoRivers	StonoRiver	Ple-01676	32.63	-80.31	U	145	210	250	2014				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00449	33.2	-79.19	U	205	221	272	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00450	33.2	-79.19	U	160	198	246	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00451	33.2	-79.19	U	96	173	212	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00454	33.26	-79.25	U	72	155	192	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00455	33.29	-79.29	U	46	138	172	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00456	33.29	-79.29	U	44	134	168	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00593	33.21	-79.2	U	750	335	406	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00649	33.21	-79.21	U	216	223	273	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00650	33.21	-79.2	U	1094	375	455	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	Georgetown/GrandStrand	Ple-00673	33.24	-79.19	U	368	273	331	2010				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01265	33.83	-78.64	U			370	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01268	33.83	-78.64	U			445	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01269	33.55	-79.03	U			592	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01497	33.83	-78.64	U		519	618	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01499	33.83	-78.64	U		479	571	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01814	33.55	-79.03	U		288	353	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01823	33.53	-79.03	U		370	452	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01883	33.83	-78.64	U		568	679	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	GrandStrand	Ple-01885	33.55	-79.03	U		327	396	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-1004	33.22	-79.2	U	974	352	427	2011				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01063	33.2	-79.2	U	76		192	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01094	33.21	-79.2	U	148		241	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01231	33.2	-79.21	U	1057		461	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01395	33.24	-79.19	U	191	212	262	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01577	33.28	-79.27	U	480	283	346	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01602	33.39	-79.24	U	96	178	218	2013				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01715	33.21	-79.2	U	222	225	290	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01810	33.22	-79.2	U	590	296	360	2015				SC DNR	USA	SC									
+ATL	MATL	MATL	SC	WinyahBay	WinyahBay	Ple-01850	33.21	-79.2	U	632	320	381	2015				SC DNR	USA	SC									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-100	30	-81.4	U	56	135	170	2016			MJX1610327	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-101	30	-81.4	F	91.2	165	199	2016			MJX1610328	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-102	30	-81.4	U	17.4	103	123	2016			MJX1610329	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-103	30	-81.4	U	101.1	167	205	2016			MJX1610330	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-104	30	-81.4	F	78.2	156	176	2016			MJX1610331	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-74	30	-81.4	U	98.8	171	212	2016			MJX1610301	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-75	30	-81.4	U	43.9	133	179	2016			MJX1610302	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-76	30	-81.4	U	13.1	92	113	2016			MJX1610303	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-77	30	-81.4	U	20.3	104	27	2016			MJX1610304	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-78	30	-81.4	U	1.3	42	52	2016			MJX1610305	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-79	30	-81.4	U	10.6	82	101	2016			MJX1610306	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-80	30	-81.4	U	118.3	177	220	2016			MJX1610307	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-81	30	-81.4	U	84.4	166	204	2016			MJX1610308	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-82	30	-81.4	U	3.4	61	76	2016			MJX1610309	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-83	30	-81.4	U	106.6	185	224	2016			MJX1610310	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-84	30	-81.4	U	6.1	68	85	2016			MJX1610311	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-85	30	-81.4	U	100.8	177	215	2016			MJX1610312	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-86	30	-81.4	U	112.2	184	226	2016			MJX1610313	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-87	30	-81.4	U	82.06	185	202	2016			MJX1610314	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-88	30	-81.4	U	64.7	153	191	2016			MJX1610315	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-89	30	-81.4	U	5.7	69	87	2016			MJX1610316	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-90	30	-81.4	U	17.8	101	129	2016			MJX1610317	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-91	30	-81.4	U	111.9	179	223	2016			MJX1610318	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-92	30	-81.4	U	41.5	126	155	2016			MJX1610319	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-93	30	-81.4	U	9.7	78	96	2016			MJX1610320	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-94	30	-81.4	U	91.1	163	200	2016			MJX1610321	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-95	30	-81.4	U	92.3	166	210	2016			MJX1610322	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-96	30	-81.4	U	27.1	113	140	2016			MJX1610323	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-97	30	-81.4	U	5.1	66	82	2016			MJX1610324	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-98	30	-81.4	U	37.1	127	156	2016			MJX1610325	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+ATL	SWATL	SWATL	FLA	StJohnsRiver	JacksonvilleFL	FL-SF-2016-99	30	-81.4	U		121	145	2016			MJX1610326	"FL Fish & Wildlife/Russ Brodie, Matt Walker"	USA	FL									
+GULF	EGULF	CGULF	AL	EastMississippiSound	BayouLaBatre(1B)	AL-SF-2016-55	30.362	-88.241	F	0.65	310	376	2016	7	16	541	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	EastMississippiSound	BayouLaBatre(1B)	AL-SF-2016-63	30.362	-88.241	F	0.9	344	410	2016	7	16	662	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	EastMississippiSound	BayouLaBatre(1B)	AL-SF-2016-82	30.362	-88.241	F	1.35	375	458	2016	7	17	1017	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	EastMississippiSound	InshoreFowlRiver(BellingrathGardens)(NAclosestto1B)	AL-SF-2016-11	30.345	-88.205	F	1.1	364	437	2016	8	13	CRPL6	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	EastMississippiSound	InshoreFowlRiver(BellingrathGardens)(NAclosestto1B)	AL-SF-2016-12	30.345	-88.205	F	0.45	295	363	2016	8	13	CRPL7	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	BillygoatHole(DIFerryDock)(1D)	AL-SF-2016-22	30.268	-88.149	F	1.2	375	446	2016	8	14	CRPL17	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	CedarPoint(1C)	AL-SF-2016-15	30.319	-88.157	U	0.85	337	405	2016	8	14	CRPL10	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandAirportMarsh(1D)	AL-SF-2016-06	30.268	-88.149	U	0.45	273	330	2016	8	13	CRPL1	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandAirportMarsh(1D)	AL-SF-2016-07	30.268	-88.149	F	1.3	376	460	2016	8	13	CRPL2	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandAirportMarsh(1D)	AL-SF-2016-08	30.268	-88.149	U	0.25	264	321	2016	8	13	CRPL3	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandAirportMarsh(1D)	AL-SF-2016-19	30.268	-88.149	F	0.95	345	416	2016	8	14	CRPL14	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandAirportMarsh(1D)	AL-SF-2016-20	30.268	-88.149	U	0.95	356	425	2016	8	14	CRPL15	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandAirportMarsh(1D)	AL-SF-2016-21	30.268	-88.149	F	0.5	291	351	2016	8	14	CRPL16	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DauphinIslandlighthouse(2)	AL-SF-2016-34	30.22	-88.206	F	0.5	293	360	2016	7	15	85	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DIbridge(1D)	AL-SF-2016-49	30.268	-88.149	F	1.25	380	460	2016	7	15	439	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DIbridge(1D)	AL-SF-2016-50	30.268	-88.149	F	1	360	432	2016	7	15	443	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	DIbridge(1D)	AL-SF-2016-56	30.268	-88.149	F	1.2	388	464	2016	7	16	551	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Dogriver(3C)	AL-SF-2016-52	30.575	-88.099	F	1.4	411	495	2016	7	15	462	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	EastendDI(3A)	AL-SF-2016-67	30.259	-88.076	F	0.75	312	379	2016	7	17	799	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	EastendDI(3A)	AL-SF-2016-77	30.259	-88.076	F	1.4	386	453	2016	7	16	982	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	EFowlRiver(3C)	AL-SF-2016-29	30.523	-88.089	U	0.95	363	431	2016	8	14	CRPL24	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	FortMorgan(1D)	AL-SF-2016-30	30.268	-88.149	U	1.35	398	470	2016	8	14	CRPL25	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	FortMorgan(4)	AL-SF-2016-14	30.198	-88.008	U	0.9	346	419	2016	8	13	CRPL9	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	FortMorganpeninsula(4)	AL-SF-2016-31	30.198	-88.008	F	1	360	431	2016	7	15	23	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	FortMorganpeninsula(4)	AL-SF-2016-32	30.198	-88.008	F	0.6	295	383	2016	7	15	25	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	FowlRiver(3B)	AL-SF-2016-66	30.523	-88.089	F	0.55	290	355	2016	7	17	765	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Ftmorgan(4)	AL-SF-2016-71	30.198	-88.008	F	1.6	410	486	2016	7	16	888	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Ftmorganpeninsula(4)	AL-SF-2016-65	30.198	-88.008	F	1.1	392	470	2016	7	16	721	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Ftmorganpeninsula(4)	AL-SF-2016-78	30.198	-88.008	F	0.6	295	365	2016	7	16	986	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	GulfShores(4)	AL-SF-2016-16	30.198	-88.008	U	0.95	367	438	2016	8	14	CRPL11	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	GulfShores(4)	AL-SF-2016-17	30.198	-88.008	U	0.8	341	407	2016	8	14	CRPL12	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	HeronBay(1C)	AL-SF-2016-09	30.306	-88.15	F	0.7	243	407	2016	8	13	CRPL4	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	HeronBay(1C)	AL-SF-2016-10	30.306	-88.15	F	0.4	267	322	2016	8	13	CRPL5	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	heronbay(1C)	AL-SF-2016-35	30.306	-88.15	F	1.3	399	462	2016	7	15	117	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MISS(NoData)	AL-SF-2016-48	30.37	-87.99	F	0.8	350	420	2016	7	15	390	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MobileRiver(3E)	AL-SF-2016-23	30.345	-88.138	U	1	367	445	2016	8	14	CRPL18	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MobileRiver(3E)	AL-SF-2016-24	30.345	-88.138	F	0.5	295	352	2016	8	14	CRPL19	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MobileRiver(3E)	AL-SF-2016-25	30.345	-88.138	U	0.85	345	410	2016	8	14	CRPL20	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MobileRiver(3E)	AL-SF-2016-26	30.345	-88.138	U	0.95	360	432	2016	8	14	CRPL21	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Mobileriver(3E)	AL-SF-2016-38	30.345	-88.138	F	1.75	465	548	2016	7	15	187	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Mobileriver(3E)	AL-SF-2016-43	30.345	-88.138	F	0.65	310	375	2016	7	15	365	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Mobileriver(3E)	AL-SF-2016-53	30.345	-88.138	F	1	365	443	2016	7	15	463	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MobileRiver(3E)	AL-SF-2016-54	30.345	-88.138	F	1	366		2016	7	16	535	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	MobileRiverCauseway(3E)	AL-SF-2016-75	30.345	-88.138	F	1.6	331	393	2016	7	16	937	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1A)	AL-SF-2016-70	30.37	-87.998	F	0.9	331	399	2016	7	17	881	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1C)	AL-SF-2016-36	30.319	-88.157	F	0.75	345	408	2016	7	15	129	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1C)	AL-SF-2016-37	30.319	-88.157	F	0.8	340	404	2016	7	15	131	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1C)	AL-SF-2016-68	30.319	-88.157	F	0.8	332	401	2016	7	17	815	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1C)	AL-SF-2016-69	30.319	-88.157	F	1.1	363	439	2016	7	17	817	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1D)	AL-SF-2016-33	30.268	-88.149	F	1.1	365	438	2016	7	15	65	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(1D)	AL-SF-2016-64	30.268	-88.149	F	1.2	395	472	2016	7	16	687	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(2)	AL-SF-2016-58	30.22	-88.206	F	1	365	431	2016	7	16	585	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(2)	AL-SF-2016-79	30.22	-88.206	F	0.9	355	430	2016	7	16	992	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3A)	AL-SF-2016-47	30.319	-88.084	F	1.05	372	440	2016	7	15	385	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3C)	AL-SF-2016-42	30.507	-88.083	F	0.9	355	424	2016	7	15	307	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3C)	AL-SF-2016-57	30.507	-88.083	U	1.4	430	512	2016	7	16	567	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3D)	AL-SF-2016-40	30.594	-88.05	F	1.2	396	468	2016	7	15	229	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3D)	AL-SF-2016-72	30.594	-88.05	F	1	340	410	2016	7	17	899	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3E)	AL-SF-2016-73	30.345	-88.138	F	1.1	372	445	2016	7	17	903	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3E)	AL-SF-2016-74	30.345	-88.138	F	1.1	350	420	2016	7	17	905	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3H)	AL-SF-2016-51	30.366	-87.852	F	1	357	430	2016	7	15	455	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(3J)	AL-SF-2016-46	30.26	-87.976	F	1.2	402	480	2016	7	15	383	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-39	30.37	-87.99	U	0.65	320	390	2016	7	9	221	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-41	30.37	-87.99	F	1.05	361	430	2016	7	15	231	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-45	30.37	-87.99	F	0.55	295	368	2016	7	9	369	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-59	30.37	-87.99	F	1.25	402	479	2016	7	16	609	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-60	30.37	-87.99	F	0.85	345	414	2016	7	16	613	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-61	30.37	-87.99	F	0.7	329	389	2016	7	16	637	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-62	30.37	-87.99	F	0.8	345	415	2016	7	16	654	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-83	30.37	-87.99	F	1.45	401	477	2016	7	17	1063	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-84	30.37	-87.99	F	1.3	390	469	2016	7	17	1123	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	NoData(NoData)	AL-SF-2016-85	30.37	-87.99	F	0.7	318	390	2016	7	17	1331	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Notgiven(3C)	AL-SF-2016-13	30.507	-88.083	U	0.75	335	499	2016	8	13	CRPL8	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	PelicanBay	AL-SF-2016-03	30.642	-87.919	F		288	352	2016	1	23	MBPL03	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	PelicanBay	AL-SF-2016-04	30.642	-87.919	F		337	438	2016	1	23	MBPL04	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	PelicanBay	AL-SF-2016-05	30.642	-87.919	F		396	484	2016	1	23	MBPL05	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	SouthDIbridge(1D)	AL-SF-2016-44	30.268	-88.149	F	1.95	366	434	2016	7	15	368	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	TheodoreIndustrialCanal(3C)	AL-SF-2016-27	30.507	-88.083	U	1.35	400	471	2016	8	14	CRPL22	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	TheodoreIndustrialCanal(3C)	AL-SF-2016-28	30.507	-88.083	U	1	362	426	2016	8	14	CRPL23	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	TheodorIndustrialCanal	AL-SF-2016-02	30.507	-88.083	F				2016	1	9	MBPL02	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	WaterFowlRiver	AL-SF-2016-01	30.523	-88.089	F				2016	1	9	MBPL01	Drymon/Pearce	USA	AL 									
+GULF	EGULF	CGULF	AL	MobileBay	WeeksBay(3H)	AL-SF-2016-18	30.366	-87.852	F	2.45	485	565	2016	8	14	CRPL13	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	WestendDI(NoData)	AL-SF-2016-76	30.246	-88.063	F	1.6	410	486	2016	7	16	941	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	WestendDI(NoData)	AL-SF-2016-80	30.246	-88.063	F	0.9	365	435	2016	7	16	994	Drymon/Pearce	USA	AL									
+GULF	EGULF	CGULF	AL	MobileBay	Westendsouthofisland(NoData)	AL-SF-2016-81	30.246	-88.063	F	1.5	410	492	2016	7	16	996	Drymon/Pearce	USA	AL									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-21	28.901	-89.105	U			320	2015	9		32	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-22	28.901	-89.105	U			280	2015	9		28	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-23	28.901	-89.105	U			360	2015	9		36	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-24	28.901	-89.105	U			430	2015	9		43	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-25	28.901	-89.105	U			320	2015	9		32	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-26	28.901	-89.105	U			550	2015	9		55	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-27	28.901	-89.105	U			350	2015	9		35	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-28	28.901	-89.105	U			410	2015	9		41	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-29	28.901	-89.105	U			340	2015	9		34	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-30	28.901	-89.105	U			350	2015	9		35	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-31	28.901	-89.105	U			370	2015	9		37	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-32	28.901	-89.105	U			340	2015	9		34	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-33	28.901	-89.105	U			360	2015	9		36	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-34	28.901	-89.105	U			350	2015	9		35	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-35	28.901	-89.105	U			320	2015	9		32	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-36	28.901	-89.105	U			440	2015	9		44	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-37	28.901	-89.105	U			365	2015	9		36.5	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-38	28.901	-89.105	U			395	2015	9		39.5	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-39	28.901	-89.105	U			390	2015	9		39	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-40	28.901	-89.105	U			425	2015	9		42.5	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-41	28.901	-89.105	U			400	2015	9		40	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-42	28.901	-89.105	U			380	2015	9		38	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-44	28.901	-89.105	U			390	2015	9		39	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-45	28.901	-89.105	U			350	2015	9		35	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-46	28.901	-89.105	U			300	2015	9		30	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-47	28.901	-89.105	U			380	2015	9		38	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-48	28.901	-89.105	U			390	2015	9		39	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-49	28.901	-89.105	U			380	2015	9		38	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-50	28.901	-89.105	U			360	2015	9		36	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-51	28.901	-89.105	U			390	2015	11		39	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-52	28.901	-89.105	U			410	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-53	28.901	-89.105	U			340	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-54	28.901	-89.105	U			380	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-55	28.901	-89.105	U			390	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-56	28.901	-89.105	U			360	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-57	28.901	-89.105	U			300	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-58	28.901	-89.105	U			310	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-59	28.901	-89.105	U			390	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-60	28.901	-89.105	U			340	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-61	28.901	-89.105	U			380	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-62	28.901	-89.105	U			380	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-63	28.901	-89.105	U			300	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-64	28.901	-89.105	U			340	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-65	28.901	-89.105	U			350	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-66	28.901	-89.105	U			330	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-67	28.901	-89.105	U			350	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-68	28.901	-89.105	U			400	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-69	28.901	-89.105	U			420	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay	sampledbyguidesatvenicdocks	LA-SF-2015-70	28.901	-89.105	U			420	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-01 A/B	29.521	-90.2	U			278	2015	11			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-02 A/B	28.972	-89.49	U			197	2014	12			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-03 A/B	29.166	-89.565	U			227	2014	12			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-04 A/B	29.087	-89.499	U			200	2014	12			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-05 A/B	29.125	-90.097	U			280	2015	3			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-06 A/B	28.995	-90.111	U			227	2015	3			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-11 A/B	29.239	-90.003	U			227	2015	5			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-12 A/B	29.211	-88.767	U			447	2015	5			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-13 A/B	29.293	-90.044	U			251	2015	5			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-14 A/B	29.293	-90.044	U			262	2015	5			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-15 A/B	29.293	-90.044	U			266	2015	5			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-16	28.992	-89.154	U			368	2015	7		"SF14.5"""	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-17	28.992	-89.154	U			343	2015	7		"SF13.5"""	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-18	28.992	-89.154	U			349	2015	7		"SF13.75"""	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-19	28.992	-89.154	U			457	2015	7		"SF18"""	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	BaratariaBay		LA-SF-2015-20	28.992	-89.154	U			330	2015	7		"SF13"""	Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	LAoffshore		LA-SF-2015-08 A/B	28.542	-91.367	U			277	2015	3			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	LAoffshore		LA-SF-2015-09 A/B	28.26	-91.509	U			333	2015	3			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	LAoffshore		LA-SF-2015-10 A/B	29.028	-91.506	U			259	2015	3			Faltermann	USA	LA									
+GULF	WGULF	CGULF	LA	LAoffshore		LA-SF-2015-07 A/B	28.495	-90.588	U			299	2015	3			Faltermann	USA	LA									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BaySt.Louis	MS-SF-2016-01	30.320981	-89.311478	F			324	2016	1	8	PL473	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BaySt.Louis	MS-SF-2016-02	30.320981	-89.311478	F			324	2016	1	10	PL474	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BaySt.Louis	MS-SF-2016-03	30.320981	-89.311478	F			368	2016	1	10	PL475	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	Biloxi	MS-SF-2015-18	30.419781	-88.864362	F			335	2015	7	7	PL339	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	Biloxi	MS-SF-2016-04	30.419781	-88.864362	F			455	2016	2	6	PL480	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	Biloxi	MS-SF-2016-05	30.419781	-88.864362	F			457	2016	2	6	PL481	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BiloxiBay	MS-SF-2015-04	30.385879	-88.860037	F			339	2015	4	1	PL165	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BiloxiBay	MS-SF-2015-05	30.385879	-88.860037	F			348	2015	4	16	PL170	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BiloxiBay	MS-SF-2015-06	30.385879	-88.860037	F			332	2015	4	16	PL171	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BiloxiBay	MS-SF-2015-07	30.385879	-88.860037	F			363	2015	4	29	PL194	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	BiloxiBay	MS-SF-2015-09	30.385879	-88.860037	F			353	2015	5	14	PL198	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-26	30.231428	-89.116057	M			239	2015	8	28	PL399	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-27	30.231428	-89.116057	F			470	2015	8	28	PL400	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-28	30.231428	-89.116057	F			375	2015	8	28	PL401	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-29	30.231428	-89.116057	F			388	2015	8	28	PL402	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-39	30.231428	-89.116057	F			336	2015	12	7	PL463	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-40	30.231428	-89.116057	F			355	2015	12	7	PL464	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-41	30.231428	-89.116057	F			320	2015	12	7	PL465	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-42	30.231428	-89.116057	F			367	2015	12	7	PL466	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-43	30.231428	-89.116057	F			275	2015	12	7	PL467	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-44	30.231428	-89.116057	F			375	2015	12	7	PL468	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-45	30.231428	-89.116057	F			316	2015	12	7	PL469	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-46	30.231428	-89.116057	F			277	2015	12	7	PL470	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	CatIsland	MS-SF-2015-47	30.231428	-89.116057	F			410	2015	12	7	PL471	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2014-01	30.391345	-88.809917	F			290	2014	11	26	PL084	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-02	30.391345	-88.809917	F			306	2015	3	21	PL151	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-03	30.391345	-88.809917	F			319	2015	3	21	PL152	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-08	30.391345	-88.809917	F			375	2015	5	9	PL197	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-17	30.391345	-88.809917	F			197	2015	6	19	PL291	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-19	30.391345	-88.809917	F			334	2015	7	8	PL340	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-22	30.391345	-88.809917	F			398	2015	7	21	PL345	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-23	30.391345	-88.809917	F			335	2015	7	27	PL352	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-37	30.391345	-88.809917	F			290	2015	11	30	PL460	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DavisBayou	MS-SF-2015-38	30.391345	-88.809917	F			293	2015	11	30	PL461	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	DeerIsland	MS-SF-2015-21	30.372936	-88.831055	F			358	2015	7	16	PL344	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	FortBayou	MS-SF-2014-02	30.420796	-88.830456	F			364	2014	11	26	PL085	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	FortBayou	MS-SF-2014-03	30.420796	-88.830456	F			303	2014	12	1	PL086	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	HeronBayou	MS-SF-2015-20	30.394902	-88.77242	F			402	2015	7	14	PL343	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-10	30.401768	-88.825066	F			425	2015	5	31	PL243	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-11	30.401768	-88.825066	F			464	2015	5	31	PL244	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-12	30.401768	-88.825066	F			470	2015	5	30	PL245	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-13	30.401768	-88.825066	F			394	2015	5	31	PL247	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-14	30.401768	-88.825066	F			514	2015	5	31	PL248	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-15	30.401768	-88.825066	F			476	2015	5	31	PL249	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-16	30.401768	-88.825066	F			438	2015	5	31	PL250	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-24	30.401768	-88.825066	F			375	2015	8	9	PL354	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-25	30.401768	-88.825066	F			355	2015	8	9	PL355	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-31	30.401768	-88.825066	F			376	2015	9	26	PL413	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings	MS-SF-2015-32	30.401768	-88.825066	F			365	2015	9	26	PL414	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings/DavisBayouﬂ	MS-SF-2015-48	30.401768	-88.825066								"Rfin, Rliver, Rheart"	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSprings/DavisBayouﬂ	MS-SF-2015-49	30.401768	-88.825066								"Lfin, Lliver"	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	OceanSpringsHarbor	MS-SF-2015-01	30.401768	-88.825066	F			353	2015	3	16	PL148	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	Pascagoula	MS-SF-2015-30	30.342923	-88.534304	F			435	2015	9	26	PL412	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	PascagoulaRiver	MS-SF-2015-33	30.584248	-88.570562	F			419	2015	10	20	PL428	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	PascagoulaRiver	MS-SF-2015-34	30.584248	-88.570562	F			415	2015	10	21	PL429	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	PascagoulaRiver	MS-SF-2015-35	30.584248	-88.570562	F			441	2015	10	21	PL430	Saillant	USA	MISS									
+GULF	WGULF	CGULF	MS	WestMississippiSound	PascagoulaRiver	MS-SF-2015-36	30.584248	-88.570562	F			503	2015	10	21	PL431	Saillant	USA	MISS									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-01	29.6828	-85.198733	U	917	341	411	2016			MAP1600138	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-02	29.800333	-84.877167	U	0.93	39	48	2016			MAP1600150	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-03	29.800333	-84.877167	U	1.19	48	59	2016			MAP1600151	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-04	29.7323	-84.978317	U	0.3	27	39	2016			MAP1600153	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-05	29.665567	-85.081767	U	788.4	345	420	2016			MAP1600155	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-06	29.665567	-85.081767	U	592.2	320	380	2016			MAP1600156	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-07	29.683917	-84.983583	U	16.01	96	116	2016			MAP1600159	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-08	29.817533	-84.907517	U	557.85	312	371	2016			MAP1600184	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-09	29.74115	-84.962367	U	152	208	251	2016			MAP1600197	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-10	29.74115	-84.962367	U	1.3	44	55	2016			MAP1600198	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-11	29.9131	-84.52505	U	655.6	310	382	2016			MAP1600203	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-12	29.698133	-84.912483	U	69.8	145	180	2016			MAP1600208	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-13	29.698467	-85.063017	U	76.04	151	186	2016			MAP1600213	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-14	29.78545	-84.897483	U	691.5	308	380	2016			MAP1600232	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-15	29.778567	-84.924067	U	12.96	88	110	2016			MAP1600233	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-16	29.746833	-85.003	U	34.6	127	154	2016			MAP1600234	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-17	29.746833	-85.003	U	5.2	72	88	2016			MAP1600235	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-18	29.737783	-84.9893	U	28.2	118	143	2016			MAP1600236	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-19	29.737783	-84.9893	U	5.8	76	93	2016			MAP1600237	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-20	29.751567	-84.964233	U	6.71	76	93	2016			MAP1600238	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-21	29.764117	-84.9822	U	4.81	67	81	2016			MAP1600239	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-22	29.764117	-84.9822	U	14.12	95	117	2016			MAP1600240	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-23	29.796033	-85.019583	U	6.99	76	95	2016			MAP1600241	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-24	29.694833	-85.091867	U	67.3	158	191	2016			MAP1600243	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-25	29.694833	-85.091867	U	156.7	205	248	2016			MAP1600244	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-26	29.7848	-84.9069	U	13.54	94	115	2016			MAP1600245	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-27	29.7848	-84.9069	U	18.31	99	123	2016			MAP1600246	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-28	29.7848	-84.9069	U	18.18	101	127	2016			MAP1600247	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-29	29.7848	-84.9069	U	15.07	96	120	2016			MAP1600248	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-30	29.7848	-84.9069	U	15.62	95	120	2016			MAP1600249	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-31	29.78415	-84.886833	U	32.48	123	153	2016			MAP1600250	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-32	29.78415	-84.886833	U	72.3	158	195	2016			MAP1600251	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-33	29.78415	-84.886833	U	31.05	118	151	2016			MAP1600252	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-34	29.78415	-84.886833	U	38.99	132	161	2016			MAP1600253	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-35	29.78415	-84.886833	U	38.15	131	164	2016			MAP1600254	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-36	29.78415	-84.886833	U	28.77	114	141	2016			MAP1600255	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-37	29.78415	-84.886833	U	31.39	120	151	2016			MAP1600256	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-38	29.78415	-84.886833	U	28.46	114	143	2016			MAP1600257	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-39	29.78415	-84.886833	U	29.27	122	150	2016			MAP1600258	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-40	29.78415	-84.886833	U	27.31	117	141	2016			MAP1600259	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-41	29.78415	-84.886833	U	22.21	109	135	2016			MAP1600260	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-42	29.78415	-84.886833	U	18.48	100	124	2016			MAP1600261	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-43	29.78415	-84.886833	U	15.53	91	116	2016			MAP1600262	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-44	29.78415	-84.886833	U	30	120	150	2016			MAP1600263	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-45	29.78415	-84.886833	U	31.76	122	150	2016			MAP1600264	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-46	29.78415	-84.886833	U	17.7	99	123	2016			MAP1600265	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-47	29.78415	-84.886833	U	19.43	102	125	2016			MAP1600266	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-48	29.78415	-84.886833	U	18.95	104	126	2016			MAP1600267	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-49	29.78415	-84.886833	U	18.11	100	122	2016			MAP1600268	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-50	29.78415	-84.886833	U	21.54	107	134	2016			MAP1600269	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-51	29.78415	-84.886833	U	24.22	109	132	2016			MAP1600270	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-52	29.78415	-84.886833	U	23.98	118	144	2016			MAP1600271	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-53	29.78415	-84.886833	U	36.86	127	160	2016			MAP1600272	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-54	29.78415	-84.886833	U	32.09	123	154	2016			MAP1600273	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-55	29.78415	-84.886833	U	32.6	109	135	2016			MAP1600274	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-56	29.78415	-84.886833	U	20.96	100	125	2016			MAP1600275	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-57	29.78415	-84.886833	U	37.2	126	155	2016			MAP1600276	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-58	29.78415	-84.886833	U	36.47	125	156	2016			MAP1600277	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-59	29.78415	-84.886833	U	21.86	104	129	2016			MAP1600278	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-60	29.78415	-84.886833	U	49.72	139	168	2016			MAP1600279	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-61	29.78415	-84.886833	U	38.3	129	157	2016			MAP1600287	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-62	29.78415	-84.886833	U	25.54	113	139	2016			MAP1600288	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-63	29.78415	-84.886833	U	36.63	127	156	2016			MAP1600289	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-64	29.78415	-84.886833	U	77.88	170	205	2016			MAP1600290	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-65	29.78415	-84.886833	U	27.1	115	144	2016			MAP1600291	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-66	29.78415	-84.886833	U	24.34	110	135	2016			MAP1600292	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-67	29.78415	-84.886833	U	21.78	106	132	2016			MAP1600293	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-68	29.78415	-84.886833	U	18.82	103	125	2016			MAP1600294	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-69	29.78415	-84.886833	U	34.94	126	149	2016			MAP1600295	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-70	29.78415	-84.886833	U	22.14	104	130	2016			MAP1600296	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-71	29.78415	-84.886833	U	18.22	102	127	2016			MAP1600297	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-72	29.78415	-84.886833	U	24.09	106	135	2016			MAP1600298	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	EGULF	EGULF	FL	ApalachicolaBay	Apalachicola	FL-SF-2016-73	29.78415	-84.886833	U	27.94	118	143	2016			MAP1600299	"FL Fish & Wildlife/David Gandy, Amanda Smith"	USA	FL									
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2016-01	29.1603	-95.0272	U			327				22	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX						25.2	5.9	24	9
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2016-02	29.1694	-95.0239	U			345				33	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX						25.2	7.2	23.2	3
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2016-03	29.0286	-95.2103	U			381				20	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX						24.7	6.8	25.1	9
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2016-04	29.1997	-95.0567	U			164				A1	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX						27.3	9.1	21.3	11
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2017-01	29.3508	-94.9039	U			471	2017	6	6	F1	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX	2	311	498	0.4	1	28.6	5.5	20.9	17
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2017-02	29.3508	-94.9039	U			275	2017	6	6	F2	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX	2	311	498	0.4	1	28.6	5.5	20.9	17
+GULF	WGULF	WGULF	TX	GalvestonBay	GalvestonBay	GV-SF-2017-03	29.2522	-95.0319	U			342	2017	5	30	C6	TPWD Dickinson Glen Sutton/Nicole Plowman	USA	TX	2	61	572	0.3	0.5	27.9	7.2	21.6	14
+GULF	WGULF	WGULF	TX	MatagordaBay	MatagordaBay	MB-SF-2015-01	28.6364	-96.4589	U			55	2016	7	3	A1	TPWD Palacios Leslie Hartman	USA	TX									
+GULF	WGULF	WGULF	TX	MatagordaBay	MatagordaBay	MB-SF-2015-02	28.6486	-96.0497	U			44	2016	11	3	A2	TPWD Palacios Leslie Hartman	USA	TX									
+GULF	WGULF	WGULF	TX	MatagordaBay	MatagordaBay	MB-SF-2015-03	28.6486	-96.0497	U			41	2016	11	3	A3	TPWD Palacios Leslie Hartman	USA	TX									
+GULF	WGULF	WGULF	TX	MatagordaBay	MatagordaBay	MB-SF-2015-04	28.6825	-96.2861	U			39	2016	16	2	A4	TPWD Palacios Leslie Hartman	USA	TX									
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2015-01	29.7186	-93.9914	U			83	2016	4	26	A1/A2	TPWD Port Arthur Carey Gelpi	USA	TX				0.6	0.9	27.5	7.6	8.9	7
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2015-02	29.7186	-93.9914	U			85	2016	4	26	A3/A4	TPWD Port Arthur Carey Gelpi	USA	TX				0.6	0.9	27.5	7.6	8.9	7
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2015-03	29.9842	-93.8836	U			75	2016	5	11	A5/A6	TPWD Port Arthur Carey Gelpi	USA	TX				0.1	0.9	25.1	6.3	0.1	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-04	29.7358	-94.0369	U			332	2016	11	2	187-332	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	26.5	8	14.2	28
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-05	29.7358	-94.0369	U			265	2016	11	2	187-265	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	26.5	8	14.2	28
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-06	29.7358	-94.0369	U			332	2016	11	2	187-332	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	26.5	8	14.2	28
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-07	29.7358	-94.0369	U			265	2016	11	2	187-265	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	26.5	8	14.2	28
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-08	29.7672	-93.9575	U			370	2016	10	7	165-370	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.3	7.7	17.6	8
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-09	29.7672	-93.9575	U			370	2016	10	7	165-370	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.3	7.7	17.6	8
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-10	29.9903	-93.8583	U			298	2016	9	27	20-298	TPWD Port Arthur Carey Gelpi	USA	TX				0.2	1.3	30	8.3	4.9	6
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-11	29.9903	-93.8583	U			243	2016	9	27	20-243	TPWD Port Arthur Carey Gelpi	USA	TX				0.2	1.3	30	8.3	4.9	6
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-12	29.9903	-93.8583	U			298	2016	9	27	20-298	TPWD Port Arthur Carey Gelpi	USA	TX				0.2	1.3	30	8.3	4.9	6
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-13	29.9903	-93.8583	U			243	2016	9	27	20-243	TPWD Port Arthur Carey Gelpi	USA	TX				0.2	1.3	30	8.3	4.9	6
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-14	29.9825	-93.8358	U			616	2016	9	28	32-616	TPWD Port Arthur Carey Gelpi	USA	TX				0	1.3	30.4	6.7	6.4	4
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-15	29.9825	-93.8358	U			616	2016	9	28	32-616	TPWD Port Arthur Carey Gelpi	USA	TX				0	1.3	30.4	6.7	6.4	4
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-16	29.7311	-94.0336	U			382	2016	11	14	201-382	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	19.6	7.8	8.1	13
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-17	29.7311	-94.0336	U			417	2016	11	14	201-417	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	19.6	7.8	8.1	13
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-18	29.7311	-94.0336	U			417	2016	11	14	201-417	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	19.6	7.8	8.1	13
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-19	29.7311	-94.0336	U			382	2016	11	14	201-382	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	19.6	7.8	8.1	13
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-20	29.9811	-93.8519	U			366	2016	11	7	31-366	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1.1	23.6	8	14.5	9
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-21	29.9811	-93.8519	U			366	2016	11	7	31-366	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1.1	23.6	8	14.5	9
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-22	29.9886	-93.8136	U			342	2016	11	15	23-342	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1.2	22	9.9	11.9	6
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-23	29.9886	-93.8136	U			342	2016	11	15	23-342	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1.2	22	9.9	11.9	6
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-24	29.9775	-93.8069	U			454	2016	11	15	33-454	TPWD Port Arthur Carey Gelpi	USA	TX				0.2	0.9	21.4	9	11.7	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-25	29.9775	-93.8069	U			454	2016	11	15	33-454	TPWD Port Arthur Carey Gelpi	USA	TX				0.2	0.9	21.4	9	11.7	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-26	29.6972	-94.0272	U			398	2016	10	18	235-398	TPWD Port Arthur Carey Gelpi	USA	TX				0	1	29	7.5	6.4	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-27	29.6972	-94.0272	U			300	2016	10	18	235-300	TPWD Port Arthur Carey Gelpi	USA	TX				0	1	29	7.5	6.4	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-28	29.6972	-94.0272	U			300	2016	10	18	235-300	TPWD Port Arthur Carey Gelpi	USA	TX				0	1	29	7.5	6.4	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-29	29.6972	-94.0272	U			398	2016	10	18	235-398	TPWD Port Arthur Carey Gelpi	USA	TX				0	1	29	7.5	6.4	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-30	29.7678	-93.9419	U			348	2016	10	7	166-348	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-31	29.7678	-93.9419	U			279	2016	10	7	166-279	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-32	29.7678	-93.9419	U			278	2016	10	7	166-278	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-33	29.7678	-93.9419	U			396	2016	10	7	166-396	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-34	29.7678	-93.9419	U			443	2016	10	7	166-443	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-35	29.7678	-93.9419	U			283	2016	10	7	166-283	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-36	29.7678	-93.9419	U			323	2016	10	7	166-323	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-37	29.7678	-93.9419	U			323	2016	10	7	166-323	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-38	29.7678	-93.9419	U			340	2016	10	7	166-340	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-39	29.7678	-93.9419	U			364	2016	10	7	166-364	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-40	29.7678	-93.9419	U			443	2016	10	7	166-443	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-41	29.7678	-93.9419	U			283	2016	10	7	166-283	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-42	29.7678	-93.9419	U			332	2016	10	7	166-332	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-43	29.7678	-93.9419	U			332	2016	10	7	166-332	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-44	29.7678	-93.9419	U			364	2016	10	7	166-364	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-45	29.7678	-93.9419	U			430	2016	10	7	166-430	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-46	29.7678	-93.9419	U			278	2016	10	7	166-278	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-47	29.7678	-93.9419	U			396	2016	10	7	166-396	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-48	29.7678	-93.9419	U			273	2016	10	7	166-273	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-49	29.7678	-93.9419	U			348	2016	10	7	166-348	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	1	23.1	8.2	20.1	11
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-50	29.7431	-94.025	U			340	2016	10	25	188-340	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-51	29.7431	-94.025	U			340	2016	10	25	188-340	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-52	29.7431	-94.025	U			277	2016	10	25	188-277	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-53	29.7431	-94.025	U			420	2016	10	25	188-420	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-54	29.7431	-94.025	U			367	2016	10	25	188-367	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-55	29.7431	-94.025	U			363	2016	10	25	188-363	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-56	29.7431	-94.025	U			420	2016	10	25	188-420	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-57	29.7431	-94.025	U			367	2016	10	25	188-367	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-58	29.7431	-94.025	U			277	2016	10	25	188-277	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SabineLake	SabineLake	SL-SF-2016-59	29.7431	-94.025	U			363	2016	10	25	188-363	TPWD Port Arthur Carey Gelpi	USA	TX				0.3	0.9	24.1	8.5	10.3	
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2015-01	28.3636	-96.7217	U			132	2016	1	6	26	TPWD Port O'Connor Norman Boyd	USA	TX				2.3	2.3	28.4	6.7	5.8	28
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2015-02	28.3264	-96.7078	U			250	2016	1	6	35	TPWD Port O'Connor Norman Boyd	USA	TX				2.2	2.2	28.5	8.3	4.7	31
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2015-03	28.3106	-96.6594	U			199	2016	12	7	1	TPWD Port O'Connor Norman Boyd	USA	TX				1.2	1.2	29.7	7.9	1.7	87
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2015-04	28.3106	-96.6594	U			199	2016	12	7	2	TPWD Port O'Connor Norman Boyd	USA	TX				1.2	1.2	29.7	7.9	1.7	87
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2015-05	28.3106	-96.6594	U			160	2016	12	7	3	TPWD Port O'Connor Norman Boyd	USA	TX				1.2	1.2	29.7	7.9	1.7	87
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-06	28.33	-96.4789	U			333	2016	10	12		TPWD Port O'Connor Norman Boyd	USA	TX				0.2	1	27.1	8.2	25	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-07	28.3161	-96.6625	U			244		10	25		TPWD Port O'Connor Norman Boyd	USA	TX				0	1	27	9	23.6	7
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-08			U			385	2016	10	4		TPWD Port O'Connor Norman Boyd	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-09	28.4258	-96.4375	U			270	2016	10	18		TPWD Port O'Connor Norman Boyd	USA	TX				0.1	2.1	29	7.8	25.4	8
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-10	28.3825	-96.5158	U			382	2016	10	19		TPWD Port O'Connor Norman Boyd	USA	TX				0.7	0.7	28.8	3.8	25.7	10
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-11	28.2958	-96.6214	U			424	2016	10	26		TPWD Port O'Connor Norman Boyd	USA	TX				0	1.2	25.7	7.3	25.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-13	28.2958	-96.6214	U			350	2016	10	26		TPWD Port O'Connor Norman Boyd	USA	TX				0	1.2	25.7	7.3	25.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-14	28.2372	-96.6561	U			277	2016	10	19		TPWD Port O'Connor Norman Boyd	USA	TX				0	0.8	32	12.1	21.4	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-15	28.2958	-96.6214	U			277	2016	10	26		TPWD Port O'Connor Norman Boyd	USA	TX				0	1.2	25.7	7.3	25.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-16	28.3178	-96.5339	U			392	2016	10	12		TPWD Port O'Connor Norman Boyd	USA	TX				0	1	28.3	10	25.1	4
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-17	28.2372	-96.6561	U			159	2016	10	19		TPWD Port O'Connor Norman Boyd	USA	TX				0	0.8	32	12.1	21.4	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-18	28.3161	-96.6625	U			413	2016	10	25		TPWD Port O'Connor Norman Boyd	USA	TX				0	1	27	9	23.6	7
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-19	28.3161	-96.6625	U			199	2016	5	13		TPWD Port O'Connor Norman Boyd	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-20	28.4292	-96.4264	U			302	2016	10	18		TPWD Port O'Connor Norman Boyd	USA	TX				0.3	2.2	28.9	7.5	25.5	10
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-21	28.2958	-96.6214	U			391	2016	10	26		TPWD Port O'Connor Norman Boyd	USA	TX				0	1.2	25.7	7.3	25.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-22	28.33	-96.4789	U			270	2016	10	12		TPWD Port O'Connor Norman Boyd	USA	TX				0.2	1	27.1	8.2	25	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-23	28.3097	-96.7592	U			214	2016	11	1		TPWD Port O'Connor Norman Boyd	USA	TX				2.6	2.6	25.9	4.5	22.9	13
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-24	28.3517	-96.5844	U			232	2016	9	22		TPWD Port O'Connor Norman Boyd	USA	TX				0.1	1.1	29.1	6.7	19.3	5
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-25	28.3439	-96.4408	U			231	2016	10	17		TPWD Port O'Connor Norman Boyd	USA	TX				1	2.1	29.9	9.8	25.5	17
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-26	28.2958	-96.6214	U			271	2016	10	26		TPWD Port O'Connor Norman Boyd	USA	TX				0	1.2	25.7	7.3	25.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-27	28.3178	-96.5339	U			443	2016	10	12		TPWD Port O'Connor Norman Boyd	USA	TX				0	1	28.3	10	25.1	4
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2016-28	28.2958	-96.6214	U			282	2016	10	26		TPWD Port O'Connor Norman Boyd	USA	TX				0	1.2	25.7	7.3	25.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-01	28.2144	-96.6944	U			212	2017	1	3		TPWD Port O'Connor Norman Boyd	USA	TX				0.3	0.4	19.5	7.4	19.9	12
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-02	28.2431	-96.7819	U			293	2017	4	25		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	152	0	0.5	24.7	6.7	15.1	58
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-03	28.3694	-96.4417	U			366	2017	4	18		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	238	0.2	0.8	25.7	7.3	30.3	3
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-04	28.3167	-96.6514	U			299	2017	5	16		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	86	0	1.4	27.2	7.5	16.4	5
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-05			U			398	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-06	28.3806	-96.4319	U			408	2017	4	11		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	239	0	1	25.1	9.2	31.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-07	28.3806	-96.4319	U			353	2017	4	11		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	239	0	1	25.1	9.2	31.2	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-08			U			385	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-09			U			616	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-10			U			407	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-11			U			385	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-12			U			419	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-13			U			430	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-14			U			416	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-15			U			427	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-16	28.35	-96.435	U			368	2017	3	27		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	254						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-17			U			426	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-18			U			440	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-19			U			409	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-20			U			356	2017	3	30		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-21	28.4189	-96.4219	U			146	2017	5	13		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-22	28.3772	-96.5278	U			369	2017	6	1		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	233						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-23			U			439	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-24	28.2111	-96.7028	U			302	2017	4	25		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	183	0	1	"24,4"	9.3	6.2	5
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-25	28.4197	-96.3567	U			497	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	360	488	0.2					
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-26			U			410	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-27	28.3361	-96.6028	U			368	2017	5	23		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	258						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-28	28.425	-96.4153	U			286	2017	4	13		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	213			23	7.1	31.5	14
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-29			U			390	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-30			U			373	2017	3	30		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-31	28.35	-96.435	U			416	2017	3	27		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	254						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-32	28.35	-96.435	U			332	2017	3	27		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	254						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-33			U			367	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-34			U			442	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-35			U			387	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-36			U			410	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-37			U			366	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-38	28.4197	-96.3567	U			483	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	360	488	0.2					
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-39	28.35	-96.435	U			377	2017	3	27		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	254						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-40			U			389	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-41	28.35	-96.435	U			356	2017	3	27		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	254						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-42			F			425	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-43			F			377	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-44	28.3894	-96.71	U			271	2017	3	1		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	47			24.3	8.3	5.2	
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-45	28.425	-96.4153	U			285	2017	4	13		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	213			23	7.1	31.5	14
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-46			F			446	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-47	28.25	-96.6514	U			327	2017	4	25		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	143	0	1	24.6	8.3	19.3	5
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-48	28.3042	-96.5486	U			394	2017	4	19		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	285	0	1	24.4	8.5	26	4
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-49	28.2431	-96.7819	U			436	2017	4	25		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	152	0	0.5	24.7	6.7	15.1	58
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-50			F			424	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-51			F			400	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-52			F			428	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-53			F			429	2017	5	5		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52							
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-54			U			434	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-55			U			393	2017	3	30		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-56			U			380	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-57			U			392	2017	3	30		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-58			F			406	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-59	28.3694	-96.4417	U			354	2017	4	18		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	238	0.2	0.8	25.7	7.3	30.3	3
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-60			F			428	2017	5	14		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-61			U			393	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-62			F			447	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-63			F			445	2017	5	12		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	218						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-64			U			394	2017	5	7		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-65			U			356	2017	3	30		TPWD Port O'Connor Theresa Krenek	USA	TX	4	52	212						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-66	28.1875	-96.7569	U			361	2017	5	2		TPWD Port O'Connor Theresa Krenek	USA	TX	4	300	191	0.2	0.8	27.6	8.1	15.9	13
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-67	28.4125	-96.4639	U			483	2017	5	4		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	217	0	2.2	26.7	5.9	29	6
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-68	28.35	-96.435	U			361	2017	3	27		TPWD Port O'Connor Theresa Krenek	USA	TX	4	170	254						
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-69	28.4189	-96.4311	U			416	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-70	28.4189	-96.4311	U			386	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-71	28.4189	-96.4311	U			459	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-72	28.4189	-96.4311	U			347	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-73	28.4189	-96.4311	U			421	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-74	28.4189	-96.4311	U			431	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-75	28.4189	-96.4311	U			405	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-76	28.4189	-96.4311	U			435	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-77	28.4189	-96.4311	U			422	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	SanAntonioBay	SanAntonioBay	SA-SF-2017-78	28.4189	-96.4311	U			401	2017	5	24		TPWD Port O'Connor Theresa Krenek	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-48	29.278167	-94.077667	M			329	2015	10	14	GF22	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-49	29.278167	-94.077667	F			372	2015	10	19	GF23	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-50	29.278167	-94.077667	F			390	2015	10	19	GF24	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-51	29.278167	-94.077667	M			346	2015	10	19	GF25	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-52	29.278167	-94.077667	M			233	2015	10	19	GF26	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-53	29.278167	-94.077667	M			313	2015	10	19	GF27	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-54	29.419	-94.026333	M			311	2015	10	19	GF28	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-55	29.419	-94.026333	M			309	2015	10	19	GF29	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-56	29.530333	-93.0845	M			293	2015	10	19	GF30	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-57	29.210833	-93.0725	F			411	2015	10	20	GF31	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	MS-SF-2015-58	29.210833	-93.0725	U			463	2015	10	20	GF33	Saillant	USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-01	28.3161	-94.7953	U			540				A3		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-02	28.3161	-94.7953	U			523				A4		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-03	28.3161	-94.7953	U			432				A5 		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-04	28.3161	-94.7953	U			540				A6		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-05	28.3161	-94.7953	U			526				A7		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-06	28.3161	-94.7953	U			476				A8		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-07	28.3161	-94.7953	U			442				B1		USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-08	28.3161	-94.7953	U									USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-09	28.3161	-94.7953	U									USA	TX									
+GULF	WGULF	WGULF	TX	TXoffshore	TXoffshore	TX-SF-2016-10	28.3161	-94.7953	U									USA	TX									

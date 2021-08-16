@@ -1,0 +1,17 @@
+# spid-file generated: Thu Apr 12 22:41:23 CDT 2018
+
+# GENEPOP Parser questions
+PARSER_FORMAT=GENEPOP
+
+# Enter the size of the repeated motif (same for all loci: one number; different: comma separated list (e.g.: 2,2,3,2):
+GENEPOP_PARSER_REPEAT_SIZE_QUESTION=
+# Select the type of the data:
+GENEPOP_PARSER_DATA_TYPE_QUESTION=STANDARD
+# How are Microsat alleles coded?
+GENEPOP_PARSER_MICROSAT_CODING_QUESTION=ARBITARY
+
+# GESTE / BayeScan Writer questions
+WRITER_FORMAT=GESTE_BAYE_SCAN
+
+# Specify which data type should be included in the GESTE / BayeScan file  (GESTE / BayeScan can only analyze one data type per file):
+GESTE_BAYE_SCAN_WRITER_DATA_TYPE_QUESTION=STANDARD

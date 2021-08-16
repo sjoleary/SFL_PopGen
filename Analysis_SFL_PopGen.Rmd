@@ -1,0 +1,4594 @@
+---
+title: "Disentangling complex genomic signals to understand population structure of an exploited, estuarine-dependent flatfish."
+subtitle: "Shannon J. O’Leary, Christopher M. Hollenbeck, Robert R. Vega, David S. Portnoy"
+output: 
+  tint::tintHtml:
+    number_sections: true
+    toc: true
+    toc_depth: 2
+bibliography: SFL.bib
+link-citations: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+# load libraries and functions ====
+library(tufte)
+library(tint)
+library(knitr)
+
+# invalidate cache when the package version changes
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	cache.extra = packageVersion("tint"),
+	tidy = FALSE,
+	echo = FALSE
+)
+options(htmltools.dir.version = FALSE)
+
+library(parallel)
+library(doMC)
+library(doParallel)
+library(doSNOW)
+
+library(vcfR)
+library(radiator)
+
+library(randomForestSRC)
+library(assigner)
+
+library(stringr)
+library(plotrix)
+
+library(coin)
+
+library(UpSetR)
+library(plyr)
+library(glue)
+
+source("scr/libraries.R")
+source("scr/ggplot.R")
+source("scr/xtrafunctions.R")
+source("scr/genind.R")
+source("scr/vegan.R")
+source("scr/PCA.R")
+
+# set levels and color schemes ====
+
+# ocean basins
+levels_ocean <- c("GULF", "ATL")
+
+col_oceans <- c("#048715", "#B80F0A")
+
+
+# all sampled estuaries (excluding TX offshore)
+levels_estuaries <- c(
+  "SanAntonioBay",  
+  "MatagordaBay",             # <18
+  "GalvestonBay",             # <18
+  "SabineLake",
+  "BaratariaBay",
+  "WestMississippiSound",
+  "EastMississippiSound",     # <18
+  "MobileBay",
+  "ApalachicolaBay",
+  "StJohnsRiver",
+  "StHelenSound",             # <18
+  "Stono-NorthEdistoRivers",  # <18
+  "CharlestonHarbor",
+  "SanteeRivers",             # <18
+  "WinyahBay")
+
+col_estuaries <- c(
+  "#74C73D",           # SanAntonioBay  
+  "#7C0707",           # MatagordaBay <18
+  "#F9FC3D",           # GalvestonBay <18
+  "#7008a0",           # SabineLake
+  "#EA0A6F",           # BaratariaBay
+  "#377ABC",           # WestMississippiSound
+  "#446B2B",           # EastMississippiSound <18
+  "#F5861E",           # MobileBay
+  "#44546a",           # ApalachicolaBay
+  "#C40909",           # StJohnsRiver
+  "#ffbf00",           # StHelenSound <18
+  "#D6DEDE",           # Stono-NorthEdistoRivers <18
+  "#67A2D7",           # CharlestonHarbor
+  "#AF01FF",           # SanteeRivers <18
+  "#29E0E0")           # WinyahBay
+
+# estuaries with sample size > 18
+levels_estuaries3 <- c("SanAntonioBay", "SabineLake",
+                       "BaratariaBay", "WestMississippiSound", "MobileBay",
+                       "ApalachicolaBay",
+                       "StJohnsRiver",
+                       "CharlestonHarbor", "WinyahBay")
+
+col_estuaries3 <- c(
+"#74C73D",         # SanAntonioBay
+"#7008a0",           # SabineLake
+"#EA0A6F",           # BaratariaBay
+"#377ABC",           # WestMississippiSound
+"#F5861E",           # MobileBay
+"#44546a",           # ApalachicolaBay
+"#C40909",           # StJohnsRiver
+"#67A2D7",           # CharlestonHarbor
+"#29E0E0")           # WinyahBay
+
+
+# atlantic estuaries
+levels_est_atl <- c("StJohnsRiver",
+                    "StHelenSound", "Stono-NorthEdistoRivers", "CharlestonHarbor", "SanteeRivers", "WinyahBay")
+
+# gulf estuaries
+estuaries_gulf <- ordered(c("SanAntonioBay", "MatagordaBay", "GalvestonBay", "SabineLake", "TXoffshore",
+                     "BaratariaBay", "WestMississippiSound", "EastMississippiSound", "MobileBay",
+                     "ApalachicolaBay"))
+
+
+# other settings ====
+
+# set how numbers are printed
+options(scipen=999)
+
+
+# Format genind object ====
+
+# import tidy data set and convert to genind
+tidy <- read_delim("data/POPGEN/SFL.tidy.genotypyes", delim = "\t")
+
+gen <- write_genind(tidy)
+
+# load sample info as strata
+SampleInfo <- read_delim("data/POPGEN/SampleInfo.txt", delim = "\t") %>%
+  distinct(SAMPLE_ID, .keep_all = TRUE) %>%
+  mutate(POP = ordered(POP, levels = c("TX", "LA", "MS", "AL", "FL", "FLA", "SC")),
+         REGION = ordered(REGION, levels = c("WGULF", "CGULF", "EGULF", "SWATL", "MATL")),
+         OCEAN = ordered(OCEAN, levels = c("GULF", "ATL")),
+         OVERALL = "ALL")
+
+# geographic hierarchy
+geog_names <- SampleInfo %>%
+  select(ESTUARY, POP, REGION, OCEAN) %>%
+  distinct()
+
+strata <- as.data.frame(indNames(gen)) %>%
+  rename(LIB_ID = `indNames(gen)`) %>%
+  separate(LIB_ID, into = c("POP", "WELL", "SAMPLE_ID"), sep = "-", remove = FALSE, extra = "merge") %>%
+  select(-POP) %>%
+  left_join(SampleInfo) %>%
+  distinct()
+
+strata(gen) <- strata
+
+# Create data sets w/all loci ====
+
+# separate by ocean basin
+setPop(gen) <- ~OCEAN
+gen_list <- seppop(gen)
+
+# Gulf data set
+gen_gulf <- gen_list$GULF
+
+# Atlantic data set
+gen_atl <- gen_list$ATL
+
+```
+
+
+**Data sets and session info**
+
+`r margin_note("All SNP-containing loci/all individuals grouped by estuary.")`
+
+```{r}
+
+# data sets
+setPop(gen) <- ~ESTUARY
+
+gen
+
+```
+
+`r margin_note("All SNP-containing loci/individuals from northern Gulf of Mexico grouped by sampled estuary.")`
+
+```{r}
+
+gen_gulf
+
+```
+
+`r margin_note("All SNP-containing loci/individuals from US Atlantic grouped by sampled estuary.")`
+
+```{r}
+
+gen_atl
+
+```
+
+
+# Sampling design
+
+Tissues (fin clips) were taken from southern flounder young of the year (YOY), juveniles, and adults in estuaries throughout the Gulf from San Antonio Bay, TX to Apalachicola Bay, FL and in the Atlantic from St. John’s River, FL to Winyah Bay, SC. Additional fin clips from adults were obtained offshore of Texas and Louisiana which were assigned to the nearest estuary where possible. Samples are grouped by estuary within ocean basins (`GULF`, `ATL`).
+
+```{r fig.cap="Sample distribution of southern flounder young-of-the-year, juveniles, and adults sampled in estuaries throughout the Gulf of Mexico and Western Atlantic. Abbreviations listed in table below.", fig.width=9, fig.height=6}
+
+# create basemap
+map <- readOGR(dsn = "data/BASEMAPS", layer = "ne_10m_land")
+
+map <- tidy(map) %>%
+  filter(long >= -98 & long <= -77 & lat >= 25 & lat <= 35) %>%
+  droplevels()
+
+# state line basemap
+states <- readOGR(dsn = "data/BASEMAPS", layer = "ne_10m_admin_1_states_provinces_lines")
+
+states <- tidy(states) %>%
+  filter(long >= -98 & long <= -77 & lat >= 25 & lat <= 35) %>%
+  droplevels()
+
+# lat/long
+locations <- read_delim("data/ENV/Estuarycoordinates.csv", delim = ",") %>%
+  filter(Estuary %in% strata$ESTUARY) %>%
+  mutate(label = case_when(Estuary == "ApalachicolaBay" ~ "AP",
+                           Estuary == "BaratariaBay" ~ "BB",
+                           Estuary == "CharlestonHarbor" ~ "CH",
+                           Estuary == "EastMississippiSound" ~ "EMS",
+                           Estuary == "GalvestonBay" ~ "GB",
+                           Estuary == "MatagordaBay" ~ "MAT",
+                           Estuary == "MobileBay" ~ "MB",
+                           Estuary == "SabineLake" ~ "SL",
+                           Estuary == "SanAntonioBay" ~ "SA",
+                           Estuary == "SanteeRivers" ~ "SR",
+                           Estuary == "StHelenSound" ~ "SHS",
+                           Estuary == "StJohnsRiver" ~ "SJR",
+                           Estuary == "Stono-NorthEdistoRivers" ~ "ST",
+                           Estuary == "WestMississippiSound" ~ "WMS",
+                           Estuary == "WinyahBay" ~ "WB"))
+
+# plot samples (by pop)
+ggplot() +
+  geom_path(data = map,
+            aes(x = long, y = lat, group = group),
+            color = "black", size = 0.6) +
+  geom_path(data = states,
+            aes(x = long, y = lat, group = group),
+            color = "black", size = 0.3, linetype = "dashed") +
+  geom_point(data = locations, aes(x = `Estuary Longitude`, y = `Estuary Latitude`),
+             shape = 21, size = 3, color = "black", fill = "darkorange") +
+  geom_label_repel(data = locations,
+                   aes(x = `Estuary Longitude`, y = `Estuary Latitude`, label = label)) +
+  xlim(-98, -77) +
+  ylim(23, 35) +
+  labs(x = " ", y = " ") +
+  theme_standard
+
+```
+
+Southern flounder are assumed to be approximately 1 year at 25 cm (red dashed line), 2 years at 40 cm (blue line). Males are generally smaller, females are considered to be mature at approx 40 cm.
+
+```{r fig.cap="Distribution of total length [mm] across all sample locations. Dashed lines indicates approximate size at one (red) and two (blue) years old.", fig.height=20, fig.width=5}
+
+strata %>%
+  mutate(Abbreviation = case_when(ESTUARY == "ApalachicolaBay" ~ "AP",
+                                    ESTUARY == "BaratariaBay" ~ "BB",
+                                    ESTUARY == "CharlestonHarbor" ~ "CH",
+                                    ESTUARY == "EastMississippiSound" ~ "EMS",
+                                    ESTUARY == "GalvestonBay" ~ "GB",
+                                    ESTUARY == "MatagordaBay" ~ "MAT",
+                                    ESTUARY == "MobileBay" ~ "MB",
+                                    ESTUARY == "SabineLake" ~ "SL",
+                                    ESTUARY == "SanAntonioBay" ~ "SA",
+                                    ESTUARY == "SanteeRivers" ~ "SR",
+                                    ESTUARY == "StHelenSound" ~ "SHS",
+                                    ESTUARY == "StJohnsRiver" ~ "SJR",
+                                    ESTUARY == "Stono-NorthEdistoRivers" ~ "ST",
+                                    ESTUARY == "WestMississippiSound" ~ "WMS",
+                                    ESTUARY == "WinyahBay" ~ "WB")) %>%
+  ggplot(aes(x = TL)) +
+    geom_histogram(binwidth = 25, color = "black", fill = "darkorange") +
+    geom_vline(xintercept = 250, color = "darkred", linetype = "dashed", size = 1) + # 1 yr (males smaller)
+    geom_vline(xintercept = 400, color = "darkblue", linetype = "dashed", size = 1) + # 2 yrs (females, mature)
+    labs(x = "total length", y = "number of individuals") +
+    facet_grid(Abbreviation ~ ., scales = "free_y") +
+    theme_standard
+
+# sample size estuary
+kable(
+  strata %>%
+    as.data.frame() %>%
+    count(ESTUARY) %>%
+    mutate(Abbreviation = case_when(ESTUARY == "ApalachicolaBay" ~ "AP",
+                                    ESTUARY == "BaratariaBay" ~ "BB",
+                                    ESTUARY == "CharlestonHarbor" ~ "CH",
+                                    ESTUARY == "EastMississippiSound" ~ "EMS",
+                                    ESTUARY == "GalvestonBay" ~ "GB",
+                                    ESTUARY == "MatagordaBay" ~ "MAT",
+                                    ESTUARY == "MobileBay" ~ "MB",
+                                    ESTUARY == "SabineLake" ~ "SL",
+                                    ESTUARY == "SanAntonioBay" ~ "SA",
+                                    ESTUARY == "SanteeRivers" ~ "SR",
+                                    ESTUARY == "StHelenSound" ~ "SHS",
+                                    ESTUARY == "StJohnsRiver" ~ "SJR",
+                                    ESTUARY == "Stono-NorthEdistoRivers" ~ "ST",
+                                    ESTUARY == "WestMississippiSound" ~ "WMS",
+                                    ESTUARY == "WinyahBay" ~ "WB")) %>%
+    mutate(ESTUARY = ordered(ESTUARY, levels = levels_estuaries)) %>%
+    filter(!is.na(ESTUARY)) %>%
+    select(ESTUARY, Abbreviation, n),
+  caption = "Sample size per estuary."
+)
+
+# sample size ocean
+kable(
+  strata %>%
+    as.data.frame() %>%
+    count(OCEAN),
+  caption = "Sample size per ocean basin."
+)
+
+# age class
+kable(
+  strata %>%
+    as.data.frame() %>%
+    mutate(AGE_CLASS = case_when(TL <= 250 ~ "YOY",
+                                 TL > 250 & TL < 400 ~ "JUVENILE",
+                                 TL >= 400 ~ "ADULT")) %>%
+    count(ESTUARY, AGE_CLASS) %>%
+    pivot_wider(names_from = AGE_CLASS, values_from = n) %>%
+    filter(!ESTUARY == "TXoffshore"),
+  caption = "Sample size per estuary and age class. YOY defined as fished caught at 25cm or less, juveniles 25 - 40cm, and adults as > 40cm."
+)
+
+# year caught
+kable(
+  strata %>%
+    as.data.frame() %>%
+    mutate(AGE_CLASS = case_when(TL <= 250 ~ "YOY",
+                                 TL > 250 & TL < 400 ~ "JUVENILE",
+                                 TL >= 400 ~ "ADULT")) %>%
+    filter(AGE_CLASS == "YOY") %>%
+    count(ESTUARY, YEAR) %>%
+    arrange(YEAR) %>%
+    pivot_wider(names_from = YEAR, values_from = n) %>%
+    filter(!ESTUARY == "TXoffshore"),
+  caption = "Year sampled per estuary for YOY (defined as < 25cm)."
+)
+
+```
+
+
+# Genotyping
+
+`r margin_note("See Genotyping.Rmd for details/scripts for SNP calling, filtering, and haplotyping.")`
+
+DNA was extracted using Mag-Bind Blood and Tissue DNA kits (Omega Bio-Tek). Double digest restriction-site associated DNA (ddRAD) libraries were constructed using a modified protocol [@Portnoy2015] and sequenced on four separate lanes of an `Illumina HiSeq 2500`.
+
+Raw sequences were demultiplexed using `process_radtags` [@Catchen2013]. Quality trimming, read mapping, and SNP calling were performed using the `dDocent` pipeline [@Puritz2014] and a reduced-representation reference genome previously produced for southern flounder (approximately 2 – 5% of the genome).
+
+Raw SNPs were rigorously filtered using `VCFtools` [@Danecek2011] and custom scripts following [@OLeary2018b]. Final filtering thresholds were a sequence quality of 20, a minimum genotype call rate per locus of 90%, a minor allele count of 3, a minimum genotype depth of 3, and a mean minimum depth of 15. Individuals with > 85% missing data were removed. SNPs were further filtered based on allele balance, quality/depth ratio, mapping quality ratio of reference/alternate alleles, properly paired status, strand representation, and maximum depth. Finally, `rad_haplotyper` [@Willis2017] was used to collapse SNPs on the same contig into haplotypes producing a final data set consisting of SNP-containing loci (hereafter loci) for data analysis.
+
+
+# Fst-outlier analysis
+
+Presence of $F_{ST}$-outlier loci was assessed using two methods, the `FDIST` method [@Beaumont1996] as implemented in `Arlequin` [@Excoffier2010], and a Bayesian modeling method implemented in `BayeScan` [@Foll2008]. For both methods, loci with significantly higher $F_{ST}$ than expected under a neutral model are considered as loci putatively under directional selection. Given low background $F_{ST}$ values typical of marine fish data sets [@Knutsen2011], an assessment for loci putatively under balancing selection ($F_{ST}$ significantly lower than expected) was not conducted.
+
+Analysis in `Arlequin` was based on 20,000 coalescent simulations using a strict island model. To account for multiple testing, p-values were corrected assuming a false discovery rate (FDR) < 0.05. `BayeScan` runs consisted of 25 pilot runs of 5,000 iterations, followed by a total of 550,000 iterations (burn-in of 50,000 iterations, 10,000 samples with thinning interval of 50). A FDR of 0.05 was used as the threshold for outlier detection.
+
+For both methods, $F_{ST}$-outlier analysis was run for all individuals grouped by basin, and separately for Gulf and Atlantic individuals grouped by estuary. The distribution of loci flagged during $F_{ST}$-outlier analysis loci across linkage groups (chromosomes) was assessed using a previously established linkage map.
+
+
+## All individuals (grouped by ocean basin)
+
+**Bayesian maximum likelihood (multinomial-Dirichlet model)**
+
+`BayeScan` uses differences in allele frequencies between populations to identify $F_{ST}$-outlier loci. The null model (i.e. distribution of $F_{ST}$ for neutral loci) is generated based on the multinomial-Dirichlet model which assumes allele frequencies of sub-populations are correlated through a common migrant gene pool from which they differ to varying degrees; this difference is measured by a subpopulation-specific $F_{ST}$ coefficient. Therefore, this model can incorporate ecologically realistic scenarios and is a robust method even when effective sizes and migration rates differ among subpopulations.
+
+Selection is introduced by decomposing population-specific $F_{ST}$ coefficients into population-specific component (`beta`), shared by all loci, and locus-specific component (`alpha`), shared by all poulations using logistic regresstion. If a locus-specific component is necessary to explain observed pattern of diversity (i.e. alpha significantly different from 0), departure from neutrality is inferred.
+
+`BayeScan` calculates posterior probability for model including selection using bayes factors. Multiple testing is needed to incorporate identifying loci as under selection by chance. The posterior odds are calculated to determine outlier loci. Posterior odds are calculated as the ratio of posterior probabilities indicating how much more likely the model with selection is compared to netural model. Posterior probabilities can be used to directly control FDR (expected proportion of false positives amont outlier loci). The q-value of each locus indicates the minimum FDR at which this locus may become significant, e.g. q-value > 0.05 means that 5% of corresponding outlier markers are expected to be false positives (5% threshold more stringent than corresponding p-value in classic statistics).
+
+`r margin_note("Parameters used for BayeScan run")`
+
+```{r}
+
+read_lines("results/SFL_oce.bayescanPO10kburn100kn10kthin50_Verif.txt", skip = 3, n_max = 11)
+
+```
+
+Use q-value to determine if a locus is a good candidate for locus being under the influence of selection.
+
+```{r fig.cap="Comparison of log10(qvalue) and Fst per locus.", fig.width=5, fig.height=4 }
+
+loci <- as.data.frame(t(read_delim("data/POPGEN/SFL.genotypes_genepop.gen",
+                   delim = ",", col_names = FALSE, skip = 1, n_max = 1)))
+
+colnames(loci) <- "LOCUS"
+
+fst <- read_table2("results/SFL_oce.bayescanPO10kburn100kn10kthin50_fst.txt",
+                   skip = 1, col_names = c("temp", "prob", "log10PO", "qval", "alpha", "fst")) %>%
+  select(-temp) %>%
+  mutate(log10q = log10(qval))
+
+fst <- bind_cols(loci, fst)
+
+ggplot(fst, aes(x = log10q, y = fst)) +
+  geom_point(shape = 1, size = 2, color = "black") +
+  geom_vline(xintercept = log10(0.05), color = "darkred", linetype = "dashed") +
+  geom_vline(xintercept = log10(0.01), color = "darkred", linetype = "dashed") +
+  geom_vline(xintercept = log10(0.001), color = "darkred", linetype = "dashed") +
+  geom_hline(aes(yintercept = mean(fst, na.rm = TRUE)),
+             color = "darkblue", linetype = "dashed", size = 0.5) +
+  geom_hline(yintercept = 0,
+             color = "darkblue", linetype = "dashed", size = 0.5) +
+  scale_x_reverse() +
+  labs(x = "log10(qvalue)", "fst per locus") +
+  theme_standard
+
+outlier_bayescan <- fst %>%
+  filter(qval < 0.05) %>%
+  select(LOCUS)
+
+write_delim(outlier_bayescan, "results/bayescan.oce.outlier", delim = "\t")
+
+```
+
+A total of `r nrow(outlier_bayescan)` loci have a q-value < 0.05.
+
+
+**FDIST method implemented in Arlequin**
+
+Coalescent simulations based on island model are used to generate the null distribution for neutral loci based on a given number of populations.
+
+```{r fig.cap="Fst-heterozygosity distribution for samples grouped by ocean basin. Red open circles indicate loci significantly outside the simulated null distribution.", fig.width=5, fig.height=4}
+
+# Get list of loci in data set:
+loci <- as.data.frame(t(read_delim("data/POPGEN/SFL.genotypes_genepop.gen",
+                   delim = ",", col_names = FALSE, skip = 1, n_max = 1)))
+
+colnames(loci) <- "LOCUS"
+
+LocNo <- as.data.frame(c(1:nrow(loci)))
+
+colnames(LocNo) <- "LocNo"
+
+loci <- bind_cols(LocNo, loci)
+
+# import observed Fst-heterozygosity distributions and pvalues for each model simulated ----
+
+Fstobs <- list()
+
+Fstobs[["d2oce"]] <- read_table2("results/fdist2.oce_nsim20kndemes2_ObsOut.txt",
+                      skip = 1, col_names = c("LocNo", "Obs_Het", "Obs_Fst", "pval", "1Fstquantile")) %>%
+  select(LocNo, Obs_Fst, Obs_Het, pval)
+
+
+# combine into single tidy data set ----
+Fstobs_tidy <- ldply(Fstobs, data.frame) %>%
+  rename(model = `.id`) %>%
+  mutate(model = ordered(model, levels = c("d2", "d2oce", "d4", "d4reg", "d7", "d25", "d50", "d100", "g2d5", "g4d3", "g10d25")))
+
+Fstobs_tidy <- left_join(Fstobs_tidy, loci) %>%
+  select(-LocNo) %>%
+  mutate(pval_corr = p.adjust(pval, method = "BH")) %>%
+  mutate(OUTLIER = ifelse(pval_corr < 0.05, "outlier", "neutral"))
+
+ggplot(Fstobs_tidy, aes(x = Obs_Het, y = Obs_Fst, color = OUTLIER)) +
+  geom_point(shape = 1, size = 2) +
+  geom_hline(yintercept = 0, color = "darkorange", linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 1)) +
+  scale_color_manual(values = c("black", "red")) +
+  labs(x = "heterozygosity", y = "Fst") +
+  theme_standard
+
+outlier_arlequin <- Fstobs_tidy %>%
+  filter(model == "d2oce" & pval < 0.05) %>%
+  select(LOCUS)
+
+write_delim(outlier_arlequin, "results/arlequin.2demes_ocean.outlier", delim = "\t")
+
+```
+
+A total of `r nrow(outlier_arlequin)` loci were flagged as outlier using a corrected p-value < 0.05.
+
+*Genome-wide distribution of Fst values; loci flagged as outlier by Arlequin are indicated in red.*
+
+```{r fig.height=6, fig.width=13, fig.fullwidth=TRUE}
+
+# format arlequin outlier
+loci <- as.data.frame(t(read_delim("data/POPGEN/SFL.genotypes_genepop.gen",
+                   delim = ",", col_names = FALSE, skip = 1, n_max = 1)))
+
+colnames(loci) <- "locus"
+
+LocNo <- as.data.frame(c(1:nrow(loci)))
+
+colnames(LocNo) <- "LocNo"
+
+loci <- bind_cols(LocNo, loci)
+
+outl <- read_table2("results/fdist2.oce_nsim20kndemes2_ObsOut.txt",
+                      skip = 1, col_names = c("LocNo", "Obs_Het", "Obs_Fst", "pval", "1Fstquantile")) %>%
+  left_join(loci) %>%
+  mutate(locus = as.character(str_trim(locus))) %>%
+  select(locus, Obs_Fst, pval) %>%
+  rename(LOCUS = locus)
+
+map <- read_table2("data/POPGEN/SFL.map") %>%
+  mutate(LOCUS = str_sub(LOCUS, 2)) %>%
+  left_join(outl) %>%
+  filter(!is.na(pval)) %>%
+  mutate(OUTLIER = ifelse(pval < 0.05, "OUTLIER", "NEUTRAL"))
+
+ggplot(map, aes(x = POS, y = Obs_Fst, fill = OUTLIER)) +
+  geom_point(shape = 21) +
+  geom_hline(yintercept = 0, color = "black", linetype = "dashed") +
+  facet_grid(. ~ LG, scales = "free", space = "free") +
+  scale_fill_manual(values = c("white", "red")) +
+  labs(x = "position linkage group", y = "Fst") +
+  theme_facet
+
+```
+
+Fst estimated for `r length(unique(outl$LOCUS))` loci, `r length(unique(map$LOCUS))` loci were mapped on the linkage map.
+
+
+## Gulf individuals
+
+**Bayesian maximum likelihood (multinomial-Dirichlet model)**
+
+`r margin_note("Parameters used for BayeScan run")`
+
+```{r}
+
+loci <- as.data.frame(t(read_delim("data/POPGEN/SFL.GULF.genotypes_genepop.gen",
+                   delim = ",", col_names = FALSE, skip = 1, n_max = 1)))
+
+colnames(loci) <- "LOCUS"
+
+read_lines("results/SFL_GULF.bayescanPO10kburn100kn10kthin50_Verif.txt", skip = 3, n_max = 11)
+
+```
+
+Use q-value to determine if a locus is a good candidate for locus being under the influence of selection.
+
+```{r fig.cap="Comparison of log10(qvalue) and Fst per locus.", fig.width=5, fig.height=4}
+
+fst <- read_table2("results/SFL_GULF.bayescanPO10kburn100kn10kthin50_fst.txt",
+                   skip = 1, col_names = c("temp", "prob", "log10PO", "qval", "alpha", "fst")) %>%
+  select(-temp) %>%
+  mutate(log10q = log10(qval))
+
+fst <- bind_cols(loci, fst)
+
+ggplot(fst, aes(x = log10q, y = fst)) +
+  geom_point(shape = 1, size = 2, color = "black") +
+  geom_vline(xintercept = log10(0.05), color = "darkred", linetype = "dashed") +
+  geom_vline(xintercept = log10(0.01), color = "darkred", linetype = "dashed") +
+  geom_vline(xintercept = log10(0.001), color = "darkred", linetype = "dashed") +
+  geom_hline(aes(yintercept = mean(fst, na.rm = TRUE)),
+             color = "darkblue", linetype = "dashed", size = 0.5) +
+  geom_hline(aes(yintercept = quantile(fst, 0.05, na.rm = TRUE)),
+             color = "darkblue", linetype = "dashed", size = 0.5) +
+  scale_x_reverse() +
+  labs(x = "log10(qvalue)", "fst per locus") +
+  theme_standard
+
+```
+
+*no significant outlier detected*
+
+
+**FDIST method (Arlequin)**
+
+```{r fig.cap="Fst-heterozygosity distribution.", fig.height=4, fig.width=5}
+
+# Get list of loci in data set:
+loci <- as.data.frame(t(read_delim("data/POPGEN/SFL.genotypes_genepop.gen",
+                   delim = ",", col_names = FALSE, skip = 1, n_max = 1)))
+
+colnames(loci) <- "LOCUS"
+
+LocNo <- as.data.frame(c(1:nrow(loci)))
+
+colnames(LocNo) <- "LocNo"
+
+loci <- bind_cols(LocNo, loci)
+
+# import observed Fst-heterozygosity distributions and pvalues for each model simulated ----
+
+Fstobs <- list()
+
+Fstobs[["d5"]] <- read_table2("results/fdist2_GULF_nsim20kndemes5_ObsOut.txt",
+                      skip = 1, col_names = c("LocNo", "Obs_Het", "Obs_Fst", "pval", "1Fstquantile")) %>%
+  select(LocNo, Obs_Fst, Obs_Het, pval)
+
+
+# combine into single tidy data set ----
+Fstobs_tidy <- ldply(Fstobs, data.frame) %>%
+  rename(model = `.id`) %>%
+  mutate(model = ordered(model, levels = c("d2", "d5", "d25", "d50", "d100")))
+
+Fstobs_tidy <- left_join(Fstobs_tidy, loci) %>%
+  select(-LocNo) %>%
+  mutate(pval_corr = p.adjust(pval, method = "BH")) %>%
+  mutate(OUTLIER = ifelse(pval_corr < 0.05, "outlier", "neutral"))
+
+ggplot(Fstobs_tidy, aes(x = Obs_Het, y = Obs_Fst, color = OUTLIER)) +
+  geom_point(shape = 1, size = 2) +
+  geom_hline(yintercept = 0, color = "darkorange", linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 1)) +
+  scale_color_manual(values = c("black", "darkred")) +
+  labs(x = "heterozygosity", y = "Fst") +
+  theme_standard
+
+```
+
+*no significant outlier detected*
+
+
+## Atlantic individuals
+
+**Bayesian maximum likelihood (multinomial-Dirichlet model)**
+
+*no significant outlier detected*
+
+
+**FDIST method (arlequin)**
+
+*no significant outlier detected*
+
+
+# Assessment of population structure and genetic diversity
+
+Loci were subdivided into two data sets: outlier loci (consensus loci identified by both outlier detection methods as putatively under directional selection) and neutral loci (all remaining loci). Only samples from estuaries with ≥18 individuals were used in the analysis.
+
+
+## AMOVA (hierarchical F-statistics)
+
+Hierarchical, locus-by-locus analysis of molecular variance (AMOVA), as implemented in `Arlequin`, was used to test homogeneity of each component both between oceans and among estuaries within ocean basins. Divergence in neutral loci within each ocean basin was explored further by single-level AMOVA. For each AMOVA, significance for each component of variation was assessed by permuting individuals between groups 10,000 times.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# AMOVA (estuaries within ocean basins) & pairwise Fst neutral
+./scr/arlecore3522_64bit data/POPGEN/SFL.estuaries.genotypes_arlequin.arp scr/Fstatistics_neutral_all.ars
+
+
+# AMOVA (estuaries within ocean basins) & pairwise Fst outlier
+./scr/arlecore3522_64bit data/POPGEN/SFL.estuaries.genotypes_arlequin.arp scr/Fstatistics_outlier_all.ars
+
+
+# single level AMOVA Gulf (neutral)
+./scr/arlecore3522_64bit data/POPGEN/SFL.estuaries.genotypes_arlequin.arp scr/Fstatistics_neutral_Gulf.ars
+
+
+# single level AMOVA Atlantic (neutral)
+./scr/arlecore3522_64bit data/POPGEN/SFL.estuaries.genotypes_arlequin.arp scr/Fstatistics_neutral_Atl.ars
+
+```
+
+Copy results files (`*xml`) into `/results/` directory and rename; delete results directory. Extract AMOVA and pairwise  $F_{ST}$ results from `xml` file and format into tab-delimted file.
+
+```{r}
+
+# AMOVA neutral loci
+kable(
+  read_delim("results/neutral_all_indv.amova", delim = "\t"),
+  caption = "Locus-by-locus AMOVA using neutral loci indicating variance partitioning and significance of each component.",
+  longtable = TRUE, align = "l"
+)
+
+
+# AMOVA outlier loci
+kable(
+  read_delim("results/outlier_all_indv.amova", delim = "\t"),
+  caption = "Locus-by-locus AMOVA using outlier loci indicating variance partitioning and significance of each component.",
+  longtable = TRUE, align = "l"
+)
+
+```
+
+Compare global  $F_{ST}$ (single level AMOVA results) for individuals within Gulf and Atlantic basins.
+
+```{r}
+
+# AMOVA neutral loci
+kable(
+  read_delim("results/neutral_Gulf_indv.amova", delim = "\t"),
+  caption = "Single-level AMOVA (locus-by-locus) using neutral loci indicating variance partitioning and significance of each component for Gulf individuals.",
+  longtable = TRUE, align = "l"
+)
+
+
+# AMOVA outlier loci
+kable(
+  read_delim("results/neutral_Atl_indv.amova", delim = "\t"),
+  caption = "Single-level AMOVA (locus-by-locus) using neutral loci indicating variance partitioning and significance of each component for Atlantic individuals.",
+  longtable = TRUE, align = "l"
+)
+
+```
+
+
+## Pairwise Fst
+
+Pairwise estimates of $F_{ST}$ for each component was generated in `Arlequin` as a *post hoc* test for homogeneity between estuaries. Significance was determined by permuting individuals between groups 10,000 times. P-values were corrected for multiple comparisons assuming an FDR of 0.05.
+
+```{r}
+
+# AMOVA neutral loci
+kable(
+  read_delim("results/neutral_all_indv.pairwise1.fst", delim = " "),
+  caption = "Comparison of pairwise Fst (above the diagonal) and level of significance (below the diagonal) between all pairs of estuaries in the Gulf and Atlantic using neutral loci only. * indicates significant Fst-values.",
+  longtable = TRUE, align = "l"
+)
+
+
+kable(
+  read_delim("results/neutral_all_indv.pairwise2.fst", delim = "\t") %>%
+    mutate(p_adj = p.adjust(p_val, "BH")) %>%
+    arrange(desc(p_adj)),
+  caption = "Pairwise Fst, p-value, and adjusted p-value for all pairs of estuaries in the Gulf and Atlantic using neutral loci only.",
+  longtable = TRUE, align = "l"
+)
+
+
+# AMOVA outlier loci
+kable(
+  read_delim("results/outlier_all_indv.pairwise1.fst", delim = "\t"),
+  caption = "Comparison of pairwise Fst (above the diagonal) and level of significance (below the diagonal) between all pairs of estuaries in the Gulf and Atlantic using outlier loci only. * indicates significant Fst-values.",
+  longtable = TRUE, align = "l"
+)
+
+
+kable(
+  read_delim("results/outlier_all_indv.pairwise2.fst", delim = "\t") %>%
+    mutate(p_adj = p.adjust(p_val, "BH")) %>%
+    arrange(desc(p_adj)),
+  caption = "Pairwise Fst, p-value, and adjusted p-value for all pairs of estuaries in the Gulf and Atlantic using outlier loci only.",
+  longtable = TRUE, align = "l"
+)
+
+```
+
+
+# Comparison of genetic diversity among estuaries
+
+Genomic diversity was estimated for each estuary (N > 18), using Nei’s gene diversity [@Nei1973], rarefied allele counts, and evenness. The latter is a measure of the distribution of allele frequencies and was estimated as the ratio of the Stoddart & Taylor index (diversity weighted for more abundant alleles) and the Shannon-Wiener index (diversity weighted for rarer alleles), as implemented in `poppr` [@Kamvar2014]. For each measure of diversity, a Friedman’s rank sum test was used to test homogeneity among estuaries. A Wilcoxon signed-rank test was used *post hoc* to test for pairwise differences between estuaries; p-values were corrected for multiple comparisons, using a sequential Bonferroni approach (Rice 1989).  The number of fixed loci was documented for each region and estuary, using rarefied allele counts.
+
+
+```{r eval=FALSE}
+
+# define groups to analyze ====
+setPop(gen) <- ~OCEAN
+
+gen_oce <- seppop(gen)
+
+setPop(gen) <- ~REGION
+
+gen_reg <- seppop(gen)
+
+setPop(gen) <- ~POP
+
+gen_pop <- seppop(gen)
+
+setPop(gen) <- ~ESTUARY
+
+gen_est <- seppop(gen)
+
+gen_grp <- c(gen_oce, gen_reg, gen_pop, gen_est)
+
+gen_grp[["ALL"]] <- gen
+
+# calculate diversity stats ====
+loc_stats <- list()
+
+for (p in names(gen_grp)) {
+
+locA <- locus_table(gen_grp[[p]], index = "shannon") %>%
+  as.data.frame() %>%
+  rownames_to_column("LOCUS")
+
+locB <- locus_table(gen_grp[[p]], index = "simpson") %>%
+  as.data.frame() %>%
+  rownames_to_column("LOCUS")
+
+temp <- left_join(locA, locB)
+
+locC <- locus_table(gen_grp[[p]], index = "invsimpson") %>%
+  as.data.frame() %>%
+  rownames_to_column("LOCUS")
+
+loc_stats[[p]] <- left_join(temp, locC)
+
+}
+
+loc_stats <- ldply(loc_stats, data.frame) %>%
+  select(-Hexp) %>%
+  rename(GRP = `.id`,
+         SIMPSON_IDX = `X1.D`,
+         N_ALLELES = allele,
+         SHANNON_IDX = H,
+         STODD_TAYLOR_IDX = G,
+         EVENNESS = Evenness)
+
+# calculate genetic diversity stats (heterozygosity-based) ====
+loc_stats_2 <- list()
+
+for (p in names(gen_grp)) {
+
+dat <- hierfstat:::.genind2hierfstat(gen_grp[[p]])
+stats <- basic.stats(dat)
+
+loc_stats_2[[p]] <- stats$perloc %>%
+  rownames_to_column("LOCUS")
+
+}
+
+# combine into single data frame ====
+loc_stats_2 <- ldply(loc_stats_2, data.frame) %>%
+  rename(GRP = `.id`)
+
+loc_stats <- left_join(loc_stats, loc_stats_2) %>%
+  select(GRP, LOCUS, N_ALLELES, EVENNESS, Ho, Hs, Ht, Fis, SHANNON_IDX, SIMPSON_IDX, STODD_TAYLOR_IDX) %>%
+  filter(LOCUS != "mean") %>%
+  mutate(OCEAN = ifelse(GRP %in% c("ATL",
+                                   "SWATL", "MATL",
+                                   "FLA", "SC",
+                                   "StJohnsRiver", "StHelenSound", "Stono-NorthEdistoRivers",
+                                   "CharlestonHarbor", "SanteeRivers", "WinyahBay"), "ATL",
+                        ifelse(GRP == "ALL", "OVERALL", "GULF")))
+
+loc_stats[is.na(loc_stats)] <- NA
+
+write_delim(loc_stats, "results/gendiv.locstats", delim = "\t")
+
+```
+
+
+## Nei's gene diversity (expected heterozygosity)
+
+Compare patterns of gene diversity across loci within estuaries.
+
+```{r fig.cap="Distribution of Nei's gene diversity (Hs) per locus among individuals grouped by estuary.", fig.width=9, fig.height=4}
+
+het <- read_delim("results/gendiv.locstats", delim = "\t") %>%
+  select(GRP, OCEAN, LOCUS, Hs) %>%
+  filter(GRP %in% levels_estuaries3) %>%
+  mutate(GRP = ordered(GRP, levels = levels_estuaries3))
+
+ggplot(het, aes(x = GRP, y = Hs, fill = OCEAN)) +
+  geom_boxplot() +
+  coord_flip() +
+  scale_fill_manual(values = col_oceans) +
+  labs(x = "", y = "Nei's gene diversity") +
+  theme_standard +
+  theme(axis.text.x = element_text(angle = -90))
+
+```
+
+Test for significant differences among estuaries using Friedman's test.
+
+```{r echo=TRUE}
+
+# remove loci with Na values
+rm <- read_delim("results/gendiv.locstats", delim = "\t") %>%
+  select(GRP, LOCUS, Hs) %>%
+  filter(GRP %in% levels_estuaries3) %>%
+  mutate(GRP = ordered(GRP, levels = levels_estuaries3)) %>%
+  filter(is.na(Hs))
+
+temp <- het %>%
+  filter(!LOCUS %in% rm$LOCUS)
+
+friedman.test(Hs ~ GRP | LOCUS, data = temp)
+
+```
+
+Test for significant pairwise differences between estuaries using Wilcoxon signed rank test; tests symmetry of numeric repeated measurements (statistic per locus) in block design.
+
+```{r echo=TRUE}
+
+# remove loci with Na values
+rm <- het %>%
+  filter(is.na(Hs))
+
+het <- het %>%
+  filter(!LOCUS %in% rm$LOCUS)
+
+# groups to compare
+comp <- as.character(unique(het$GRP))
+
+# pairs of comparisons
+# pairs <- combn(comp, 2, simplify = FALSE)
+
+pairs <- expand.grid(comp, comp) %>%
+  filter(!Var1 == Var2) %>%
+  rownames_to_column("PAIR") %>%
+  split(.$PAIR) %>%
+  purrr::map(function(x){
+    x %>%
+      select(-PAIR) %>%
+      gather(key = temp, value = GRP, 1:2) %>%
+      select(-temp)
+  })
+
+# empty data frame for results
+results <- setNames(data.frame(matrix(ncol = 4, nrow = 0)), 
+                    c("pop1", "pop2", "stat", "p.value")) %>%
+  mutate(pop1 = as.character(pop1),
+         pop2 = as.character(pop2),
+         stat = as.numeric(stat),
+         p.value = as.numeric(p.value))
+
+n <- as.numeric(length(pairs))
+
+# loop over pairs
+for(p in 1:length(pairs)){
+
+  pair <- pairs[[p]]$GRP
+
+  temp <- het %>%
+    filter(GRP %in% pair) %>%
+    mutate(GRP = ordered(GRP, levels = pair),
+         LOCUS = as.factor(LOCUS)) %>%
+  droplevels()
+
+  wilcox <- wilcoxsign_test(Hs ~ GRP | LOCUS,
+                data = temp,
+                zero.method = "Pratt")
+
+  df <- data.frame("pop1" = pair[1],
+                   "pop2" = pair[2],
+                   "stat" = as.numeric(wilcox@statistic@teststatistic),
+                   "p-value" = as.numeric(pvalue(wilcox)))
+
+  results <- bind_rows(results, df)
+
+}
+
+results <- results %>%
+  mutate(p_adj = p.adjust(p.value, "BH")) %>%
+  mutate(pop1 = ordered(pop1, levels = levels_estuaries3),
+         pop2 = ordered(pop2, levels = levels_estuaries3)) %>%
+  mutate(OCEAN1 = ifelse(pop1 %in% c("WinyahBay", "CharlestonHarbor", "StJohnsRiver"), "ATL", "GULF"),
+         OCEAN2 = ifelse(pop2 %in% c("WinyahBay", "CharlestonHarbor", "StJohnsRiver"), "ATL", "GULF"),
+         p.value = round(p.value, digits = 5),
+         p_adj = round(p_adj, digits = 5)) %>%
+  unite(COMP, OCEAN1, OCEAN2, sep = "-")
+
+```
+
+Compare significance of pairwise differences.
+
+```{r fig.cap="Level of significance of pairwise comparisons of distribution of Nei's gene diversity across loci for individuals samples in a given estuary.", fig.height=10, fig.width=10}
+
+ggplot(results, aes(x = pop1, y = pop2, fill = p_adj)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = round(p_adj, 2))) +
+  scale_fill_viridis() +
+  coord_fixed(ratio = 1) +
+  labs(x = "", y = "") +
+  theme_standard +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+kable(
+  results %>%
+    filter(stat > 0) %>%
+    mutate(stat = round(stat, digits = 2)) %>%
+    arrange(stat),
+  caption = "Test statistic, p-value and adjusted p-value of pairwise comparisons of Nei's gene diversity.",
+  align = "l"
+)
+
+```
+
+
+## Rarefied allele counts
+
+```{r echo=TRUE, eval=FALSE}
+
+# overall
+setPop(gen) <- ~OVERALL
+
+dat <- hierfstat:::.genind2hierfstat(gen)
+
+ar <- allelic.richness(dat,
+                       diploid = TRUE)
+
+ar <- as.data.frame(ar$Ar) %>%
+  rownames_to_column("LOCUS") %>%
+  rename(ALL = `1`)
+
+# by ocean
+setPop(gen) <- ~OCEAN
+
+dat <- hierfstat:::.genind2hierfstat(gen)
+
+df <- allelic.richness(dat,
+                       diploid = TRUE)
+
+df <- as.data.frame(df$Ar) %>%
+  rownames_to_column("LOCUS") %>%
+  rename(GULF = `1`,
+         ATL = `2`)
+
+ar <- left_join(ar, df)
+
+# by region
+setPop(gen) <- ~REGION
+
+dat <- hierfstat:::.genind2hierfstat(gen)
+
+df <- allelic.richness(dat,
+                       diploid = TRUE)
+
+df <- as.data.frame(df$Ar) %>%
+  rownames_to_column("LOCUS") %>%
+  rename(CGULF = `1`,
+         EGULF = `2`,
+         SWATL = `3`,
+         MATL = `4`,
+         WGULF = `5`)
+
+ar <- left_join(ar, df)
+
+# by estuary
+setPop(gen) <- ~ESTUARY
+
+gen_est <- seppop(gen)
+
+temp <- gen_est[c("SanAntonioBay", "SabineLake",
+                  "BaratariaBay", "WestMississippiSound", "MobileBay",
+                  "ApalachicolaBay",
+                  "StJohnsRiver", "CharlestonHarbor", "WinyahBay")]
+
+temp <- repool(temp)
+
+setPop(temp) <- ~ESTUARY
+
+dat <- hierfstat:::.genind2hierfstat(temp)
+
+df <- allelic.richness(dat,
+                       diploid = TRUE)
+
+df <- as.data.frame(df$Ar) %>%
+  rownames_to_column("LOCUS") %>%
+  rename(SanAntonioBay = `1`,
+         SabineLake = `2`,
+         BaratariaBay = `3`,
+         WestMississippiSound = `4`,
+         MobileBay = `5`,
+         ApalachicolaBay = `6`,
+         StJohnsRiver = `7`,
+         CharlestonHarbor = `8`,
+         WinyahBay = `9`)
+
+ar <- left_join(ar, df)
+
+write_delim(ar, "results/rarefied.allelecount", delim = "\t")
+
+```
+
+Calculate allelic richness corrected for sample size using rarefaction.
+
+```{r fig.cap="Distribution of rarefied allele counts per estuary.", fig.height=4, fig.width=8}
+
+ar <- read_delim("results/rarefied.allelecount", delim = "\t") %>%
+  gather(key = pop, value = AR, 2:18) %>%
+  filter(pop %in% levels_estuaries3) %>%
+  mutate(pop = ordered(pop, levels = levels_estuaries3)) %>%
+  as.data.frame()
+
+ar %>%
+  mutate(OCEAN = ifelse(pop %in% levels_est_atl, "ATL", "GULF")) %>%
+  ggplot(aes(x = pop, y = AR, fill = OCEAN)) +
+    geom_boxplot() +
+    scale_fill_manual(values = col_oceans) +
+    coord_flip() +
+    labs(x = "", y = "rarefied allele count") +
+    theme_standard
+
+```
+
+Test for significant differences among estuaries using Friedman's test.
+
+```{r}
+
+friedman.test(AR ~ pop | LOCUS, data = ar)
+
+```
+
+Test for significant pairwise differences between estuaries using Wilcoxon signed rank test to identify patterns of significant differentiation.
+
+```{r fig.cap="Level of significance of pairwise comparisons of distribution of rarefied allelecounts across loci for individuals samples in a given estuary.", fig.height=7, fig.width=7}
+
+# groups to compare
+comp <- as.character(unique(ar$pop))
+
+# pairs of comparisons
+pairs <- expand.grid(comp, comp) %>%
+  filter(!Var1 == Var2) %>%
+  rownames_to_column("PAIR") %>%
+  split(.$PAIR) %>%
+  purrr::map(function(x){
+    x %>%
+      select(-PAIR) %>%
+      gather(key = delete, value = GRP, 1:2) %>%
+      select(-delete)
+  })
+
+# empty data frame for results
+results <- setNames(data.frame(matrix(ncol = 4, nrow = 0)), 
+                    c("pop1", "pop2", "stat", "p.value")) %>%
+  mutate(pop1 = as.character(pop1),
+         pop2 = as.character(pop2),
+         stat = as.numeric(stat),
+         p.value = as.numeric(p.value))
+
+n <- as.numeric(length(pairs))
+
+# loop over pairs
+for(i in 1:length(pairs)){
+
+  p <- i
+
+  pair <- pairs[[p]]$GRP
+  
+  temp <- ar %>%
+    filter(pop %in% pair) %>%
+    mutate(pop = ordered(pop, levels = pair),
+           LOCUS = as.factor(LOCUS)) %>%
+    droplevels()
+
+  wilcox <- wilcoxsign_test(AR ~ pop | LOCUS,
+                data = temp,
+                zero.method = "Pratt")
+
+  df <- data.frame("pop1" = as.character(pair[1]),
+                   "pop2" = as.character(pair[2]),
+                   "stat" = as.numeric(wilcox@statistic@teststatistic),
+                   "p-value" = as.numeric(pvalue(wilcox)))
+
+  results <- bind_rows(results, df)
+
+}
+
+results <- results %>%
+  mutate(p_adj = p.adjust(p.value, "BH")) %>%
+  mutate(pop1 = ordered(pop1, levels = levels_estuaries3),
+         pop2 = ordered(pop2, levels = levels_estuaries3)) %>%
+  mutate(OCEAN1 = ifelse(pop1 %in% c("WinyahBay", "CharlestonHarbor", "StJohnsRiver"), "ATL", "GULF"),
+         OCEAN2 = ifelse(pop2 %in% c("WinyahBay", "CharlestonHarbor", "StJohnsRiver"), "ATL", "GULF"),
+         p.value = round(p.value, digits = 5),
+         p_adj = round(p_adj, digits = 5)) %>%
+  unite(COMP, OCEAN1, OCEAN2, sep = "-")
+
+write_delim(results, "results/pairwise_AR.sign", delim = "\t")
+
+ggplot(results, aes(x = pop1, y = pop2, fill = p_adj)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = round(p_adj, 2))) +
+  scale_fill_viridis() +
+  coord_fixed(ratio = 1) +
+  labs(x = "", y = "") +
+  theme_standard +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+kable(
+  results %>%
+    filter(stat > 0) %>%
+    mutate(stat = round(stat, digits = 2)) %>%
+    arrange(stat),
+  caption = "Test statistic, p-value, and adjusted p-value of pairwise comparisons of rarefied allele count.",
+  align = "l"
+)
+
+```
+
+
+## Evenness
+
+Determine the ratio of the number of abundant genotypes to the number of rarer genotypes calculated using the ratio of Stoddart & Tayolor index (diversity index weighted for more abundant alleles) & Shannon-Wiener index (diversity index weighted for more rare alleles).
+
+```{r fig.cap="Distribution of evenness per estuary.", fig.height=4, fig.width=9}
+
+even <- read_delim("results/gendiv.locstats", delim = "\t") %>%
+  select(GRP, LOCUS, EVENNESS, OCEAN) %>%
+  filter(GRP %in% levels_estuaries3) %>%
+  mutate(GRP = ordered(GRP, levels = levels_estuaries3))
+
+ggplot(even, aes(x = GRP, y = EVENNESS, fill = OCEAN)) +
+  geom_boxplot() +
+  scale_fill_manual(values = col_oceans) +
+  labs(x = "", y = "Evenness") +
+  coord_flip() +
+  theme_standard
+
+```
+
+Test for significant differences among estuaries using Friedman's test.
+
+```{r}
+
+# remove loci with Na values
+rm <- even %>%
+  filter(is.na(EVENNESS))
+
+temp <- even %>%
+  filter(!LOCUS %in% rm$LOCUS)
+
+friedman.test(EVENNESS ~ GRP | LOCUS, data = temp)
+
+```
+
+Test for significant pairwise differences between estuaries using Wilcoxon signed rank test to identify patterns of significant differences among estuaries.
+
+```{r fig.cap="Level of significance of pairwise comparisons of distribution of allele diversity measured as evenness across loci for individuals samples in a given estuary.", fig.height=7, fig.width=7}
+
+# remove loci with Na values
+rm <- even %>%
+  filter(is.na(EVENNESS))
+
+even <- even %>%
+  select(-OCEAN) %>%
+  filter(!LOCUS %in% rm$LOCUS)
+
+# groups to compare
+comp <- as.character(unique(even$GRP))
+
+# pairs of comparisons
+pairs <- expand.grid(comp, comp) %>%
+  filter(!Var1 == Var2) %>%
+  rownames_to_column("PAIR") %>%
+  split(.$PAIR) %>%
+  purrr::map(function(x){
+    x %>%
+      select(-PAIR) %>%
+      gather(key = temp, value = GRP, 1:2) %>%
+      select(-temp)
+  })
+
+# empty data frame for results
+results <- setNames(data.frame(matrix(ncol = 4, nrow = 0)), 
+                    c("pop1", "pop2", "stat", "p.value")) %>%
+  mutate(pop1 = as.character(pop1),
+         pop2 = as.character(pop2),
+         stat = as.numeric(stat),
+         p.value = as.numeric(p.value))
+
+n <- as.numeric(length(pairs))
+
+# loop over pairs
+for(p in 1:n){
+
+  pair <- pairs[[p]]$GRP
+
+  temp <- even %>%
+    filter(GRP %in% pair) %>%
+    mutate(GRP = ordered(GRP, levels = pair),
+         LOCUS = as.factor(LOCUS)) %>%
+  droplevels()
+
+  wilcox <- wilcoxsign_test(EVENNESS ~ GRP | LOCUS,
+                data = temp,
+                zero.method = "Pratt")
+
+  df <- data.frame("pop1" = pair[1],
+                   "pop2" = pair[2],
+                   "stat" = as.numeric(wilcox@statistic@teststatistic),
+                   "p-value" = as.numeric(pvalue(wilcox)))
+
+  results <- bind_rows(results, df)
+
+}
+
+results <- results %>%
+  mutate(p_adj = p.adjust(p.value, "BH")) %>%
+  mutate(pop1 = ordered(pop1, levels = levels_estuaries3),
+         pop2 = ordered(pop2, levels = levels_estuaries3)) %>%
+  mutate(OCEAN1 = ifelse(pop1 %in% c("WinyahBay", "CharlestonHarbor", "StJohnsRiver"), "ATL", "GULF"),
+         OCEAN2 = ifelse(pop2 %in% c("WinyahBay", "CharlestonHarbor", "StJohnsRiver"), "ATL", "GULF"),
+         p.value = round(p.value, digits = 5),
+         p_adj = round(p_adj, digits = 5)) %>%
+  unite(COMP, OCEAN1, OCEAN2, sep = "-")
+
+ggplot(results, aes(x = pop1, y = pop2, fill = p_adj)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = round(p_adj, 2))) +
+  scale_fill_viridis() +
+  coord_fixed(ratio = 1) +
+  labs(x = "", y = "") +
+  theme_standard +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+kable(
+  results %>%
+    filter(stat > 0) %>%
+    mutate(stat = round(stat, digits = 2)) %>%
+    arrange(stat),
+  caption = "Test statistic, p-value and adjusted p-value of pairwise comparisons of evenness.",
+  align = "l"
+)
+
+```
+
+
+## Fixed alleles
+
+Identify number of fixed loci within sample locations.
+
+```{r}
+
+tidy_ar <- read_delim("results/rarefied.allelecount", delim = "\t") %>%
+  gather(key = GRP, AR, 2:18) %>%
+  mutate(OCEAN = ifelse(GRP %in% c("ATL",
+                                   "SWATL", "MATL",
+                                   "StJohnsRiver", "CharlestonHarbor", "WinyahBay"), "ATL",
+                        ifelse(GRP == "ALL", "OVERALL", "GULF")))
+
+kable(
+  tidy_ar %>%
+    filter(AR == 1) %>%
+    select(GRP, LOCUS, AR) %>%
+    filter(GRP %in% levels_ocean) %>%
+    count(GRP) %>%
+    arrange(desc(n)),
+  caption = "Number of fixed alleles in the Atlantic compared to the Gulf."
+)
+
+
+kable(
+  tidy_ar %>%
+    filter(AR == 1) %>%
+    select(GRP, LOCUS, AR) %>%
+    filter(GRP %in% levels_estuaries3) %>%
+    count(GRP) %>%
+    arrange(desc(n)),
+  caption = "Number of fixed alleles per estuary with > 18 individuals based on rarefied allelic richness (estuaries sorted in descending order by number of fixed alleles)."
+)
+
+```
+
+Compare fixed loci across sampled estuaries in the Gulf and Atlantic. The set size (horizontal green bars) indicates the total number of loci fixed in a given location, the intersection size (vertical orange bars) indicates the number of loci fixed only in a single location (single blue dot) or in two, three, or four locations (indicated by blue dots connected by line).
+
+```{r fig.height=6, fig.width=13, fig.fullwidth=TRUE}
+
+# split into list
+fixed <- tidy_ar %>%
+  filter(AR == 1) %>%
+  select(GRP, LOCUS, AR) %>%
+  filter(GRP %in% levels_estuaries3) %>%
+  dlply("GRP", identity)
+
+# create vector
+listInput <- list()
+
+for (l in names(fixed)){
+
+listInput[[l]] <- fixed[[l]]$LOCUS
+
+}
+
+upset(fromList(listInput),
+      sets = levels_estuaries3,
+      keep.order = TRUE,
+      matrix.color = "darkblue", main.bar.color = "darkorange", sets.bar.color = "darkgreen",
+      text.scale = 1)
+
+```
+
+Compare global allelelic richness per locus for loci fixed in each ocean basin.
+
+```{r fig.cap="Distribution of global allele rarefied allele counts for loci fixed one of the ocean basins.", fig.height=2, fig.width=9}
+
+fixed <- tidy_ar %>%
+  filter(AR == 1) %>%
+  select(OCEAN, GRP, LOCUS, AR)
+
+all <- read_delim("results/rarefied.allelecount", delim = "\t") %>%
+  select(LOCUS, ALL) %>%
+  rename(TOTAL_ALLELES = ALL)
+
+fixed <- left_join(fixed, all)
+
+temp <- fixed %>%
+  filter(GRP %in% c("GULF", "ATL")) %>%
+  mutate(GRP = ordered(GRP, levels = c("GULF", "ATL")))
+
+ggplot(temp, aes(x = GRP, y = TOTAL_ALLELES, fill = OCEAN)) +
+  geom_boxplot() +
+  scale_fill_manual(values = col_oceans) +
+  scale_y_continuous(limits = c(0, 6)) +
+  coord_flip() +
+  labs(x = "", y = "global diversity of fixed alleles") +
+  theme_standard +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+Compare global allelelic richness per locus for loci that are fixed each sample location.
+
+```{r fig.cap="Distribution of global rarefied allele counts across all individuals for loci fixed in each estuary.", fig.height=4, fig.width=9}
+
+temp <- fixed %>%
+  filter(GRP %in% levels_estuaries3) %>%
+  mutate(GRP = ordered(GRP, levels = levels_estuaries3))
+
+ggplot(temp, aes(x = GRP, y = TOTAL_ALLELES, fill = OCEAN)) +
+  geom_boxplot() +
+  scale_fill_manual(values = col_oceans) +
+  scale_y_continuous(limits = c(2, 14),
+                     breaks = seq(2, 14, by = 2)) +
+  coord_flip() +
+  labs(x = "", y = "global diversity of fixed alleles") +
+  theme_standard
+
+```
+
+In general, loci fixed in the Gulf are less variable across all individuals compared to loci fixed in the Atlantic with have higher allelic richness in the Gulf.
+
+
+# Tests of neutrality at the genome and locus level
+
+Tajima’s D, Watterson's estimator, and nucleotide diversity was calculated for each locus as implemented in `pegas` [@Paradis2010].
+
+Get sequence information for loci by reading in reduced representation reference. Create a tidy data set of variant call information (position, alternate alleles) from filtered VCF file used to create haplotypes. Create a data frame of haplotype sequences in the data set(s) using reference contig sequences, VCF information, and `codes.out` file from `rad_haplotyper`. Calculate haplotype-based measures, including haplotype diversity, nucleotide diversity, number of segregating sites, and Tajima's D (test latter for significance).
+
+```{r eval=FALSE, echo=TRUE}
+
+# Read in the reference sequence
+fa <- seqinr::read.fasta("data/REF/reference.fasta")
+
+# create tibble with locus name and sequence
+ref <- tibble::tibble(name = seqinr::getName(fa), seq = toupper(unlist(seqinr::getSequence(fa, as.string = TRUE))))
+
+# Read the haplotype VCF file and put it in tidy format
+vcf_tidy <- read.vcfR("data/VCF/temp/SFL.recode.vcf") %>%
+  vcfR2tidy()
+
+# Get the data frame with the positions
+pos_tbl <- vcf_tidy$fix %>%
+  filter(ALT %in% c("A", "T", "C", "G"))
+
+# genind object to use
+setPop(gen) <- ~ESTUARY
+
+gen_obj <- gen
+
+# Make a data frame with all of the haplotype sequences from the 'codes.out' file from rad_haplotyper
+hap_index <- read_tsv("data/Haplotyping/codes.SFL.gen", col_names = FALSE) %>%
+  filter(X1 %in% locNames(gen_obj)) %>%
+  split(.$X1) %>%
+  purrr::map(function(x) {
+    codes <- str_split(x$X2, ",") %>%
+      unlist()
+
+    code_tbl <- tibble(locus = x$X1, code = codes) %>%
+      separate(code, c("hap", "code"), sep = ":") %>%
+      left_join(ref, by = c("locus" = "name"))
+
+    pos <- pos_tbl %>%
+      filter(CHROM == code_tbl$locus[1]) %>%
+      pull(POS)
+
+    for (i in 1:nrow(code_tbl)) {
+
+      alleles <- str_split(code_tbl$hap[i], "") %>%
+        unlist()
+
+      replace <- tibble(pos = pos, allele = alleles)
+
+      for (j in 1:nrow(replace)) {
+        str_sub(code_tbl$seq[i], replace$pos[j], 1) <- replace$allele[j]
+      }
+
+    }
+
+    code_tbl
+
+  }) %>%
+  bind_rows()
+
+
+# set pops
+setPop(gen_obj) <- ~ESTUARY
+
+# create tidy data set
+gen_tidy <- gen_obj %>%
+  genind2df(oneColPerAll = TRUE) %>%
+  rownames_to_column(var = "ind") %>%
+  gather(allele, code, -pop, -ind) %>%
+  separate(allele, c("locus", "allele"), sep = "\\.") %>%
+  filter(pop %in% c("SanAntonioBay", "SabineLake",
+                  "BaratariaBay", "WestMississippiSound", "MobileBay",
+                  "ApalachicolaBay",
+                  "StJohnsRiver", "CharlestonHarbor", "WinyahBay")) %>%
+  droplevels()
+
+# Calculate haplotype related stats
+hap_div_tbl <- locNames(gen_obj) %>%
+  purrr::map(function(y) {
+
+    # for each locus
+    gen_tidy %>%
+      filter(locus == y) %>%
+      filter(!code == "NA") %>%
+      left_join(hap_index, by = c("code", "locus")) %>%
+      as.tibble() %>%
+      arrange(factor(pop, levels = c("SanAntonioBay", "SabineLake",
+                                     "BaratariaBay", "WestMississippiSound", "MobileBay",
+                                     "ApalachicolaBay",
+                                     "StJohnsRiver", "CharlestonHarbor", "WinyahBay"))) %>%
+
+      # for each population per locus
+      split(.$pop) %>%
+      purrr::map(function(x) {
+        y <- do.call(rbind, strsplit(x$seq, ""))
+        rownames(y) <- paste(x$ind, x$allele, sep = ".")
+
+        # create DNAbin object for locus
+        dna_bin <- as.DNAbin(y)                            
+
+        # calculate Tajima's D and p-values
+        taj_test <- tajima.test(dna_bin)
+
+        # create table with results
+        tibble(locus = x$locus[1],
+               pop = x$pop[1],
+               hap_div = hap.div(dna_bin),                     # calculate haplotype diversity
+               nuc_div = nuc.div(dna_bin),                     # calculate nucleotide diversity (pi)
+               seg_sites = length(seg.sites(dna_bin)),         # count number of segregating sites
+               thetaS = theta.s(x = seg_sites, n = nLoc(gen)), # calculate theta S (watterson 1975)
+               tajima_d = taj_test$D,                          # extract Tajima's D
+               tajima_pval_norm = taj_test$Pval.normal,        # extract p-value Tajima's D (normal distribution)
+               tajima_pval_beta = taj_test$Pval.beta)          # extract p-value Tajima's D (beta distribution)
+      }) %>%
+      bind_rows()
+  }) %>%
+    bind_rows()
+
+write_delim(hap_div_tbl, "results/hap_div_est", delim = "\t")
+
+```
+
+Genome-wide, null distributions of Tajima’s D were simulated for each estuary, using a coalescent model as executed in MS [@Hudson2002], to assess whether the observed genome-wide distribution of Tajima’s D values for each estuary was consistent with a neutral, drift-mutation equilibrium. For each simulation a set of neutral loci that consisted of the same number of loci with the same distribution of segregating sites as in the observed data (grouper by estuary) was generated. The difference between empirical and simulated distributions in each estuary was then assessed by generating 1,000 simulated null distributions of Tajima’s D for each estuary and comparing the mean and median values of the empirical distribution with the mean and median of each of the 1,000 simulated distributions. Significance was assessed by estimating the probability that the observed values fall into the distribution of simulated values (means and medians).  
+
+Significance (departure from neutrality, assuming genome is in equilibrium) tested per locus in each location, assuming a beta distribution [@Tajima1989], as implemented in `pegas`. The number of significant (P < 0.05) loci, positive and negative, were then summarized by estuary. The distribution of loci with significant Tajima’s D values, both positive and negative, across linkage groups was assessed using those loci that previously were incorporated into a linkage map (O’Leary, et al. 2018).
+
+$\theta$ is the population-scaled mutation rate and can be estimated as $\hat{\theta}_T$ [@Nei1987] as the number of pairwise differences (Tajima’s estimator or $\pi$), while $\hat{\theta}_W$ is the number of segregating sites (Watterson’s estimator or $S$, [@Watterson1975] . Because $\hat{\theta}_T$ will underestimate the number of mutations that are rare in the population, Tajima's $D$ can be used to test the neutral mutation hypothesis. A negative Tajima's $D$ is indicative of positive selection while for balancing selection, alleles are kept at intermediate frequencies resulting in Tajima’s $D$ becoming positive. To better understand what was driving patterns in neutrality tests , Θ was calculated based on the number of segregating sites as $\hat{\theta}_W$ and based on pairwise differences among haplotypes (nucleotide diversity), and the mean and standard deviation compared across estuaries.
+
+## Genome-wide distriubtion
+
+Identify null distribution of Tajima's $D$ across a genome for set of neutral loci (same number of loci with same distribution of segregating sites as empirical data set) using loci simuated under coalescence using `MS` [@Hudson2002].
+
+
+**SanAntonioBay**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 23 individuals (46 observations) for no population expansion and for population expansion for alpha = 10, 30, 90.
+
+Population size is given by: N(t) = N0 exp(alpha*t), for t = time before the present, measured in units of 4N0 generations.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 46 1000 -s $i | scr/MS/sample_stats > results/Ind23_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 46 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind23_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r echo=TRUE}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind23")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "SanAntonioBay"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/SA.nulldist", delim = "\t")
+
+```
+
+Compare empirical and simulated data sets:
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/SA.nulldist", delim = "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Estimate p-values to determine if parameters describing the distribution of Tajima's D across the genome is significantly different (smaller/larger) than simulated null distributions.
+
+```{r echo=TRUE}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+  arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+```
+
+
+**Sabine Lake**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 24 individuals (48 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 48 1000 -s $i | scr/MS/sample_stats > results/Ind24_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 48 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind24_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r fig.height=15, fig.width=15}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind24")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "SabineLake"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/SL.nulldist", delim = "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/SL.nulldist", delim = "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r fig.height=8, fig.width=15}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+  arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+```
+
+
+**Barataria Bay**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 39 individuals (78 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 78 1000 -s $i | scr/MS/sample_stats > results/Ind39_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 78 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind39_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=15, fig.width=15}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind39")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "BaratariaBay"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/BB.nulldist", "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/BB.nulldist", "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r fig.height=8, fig.width=15}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+  arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+
+```
+
+
+**West Mississippi Sound**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 34 individuals (68 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 68 1000 -s $i | scr/MS/sample_stats > results/Ind34_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 68 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind34_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind34")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "WestMississippiSound"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/WMISS.nulldist", delim = "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/WMISS.nulldist", delim = "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+  arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+```
+
+
+**Mobile Bay**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 62 individuals (48 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 124 1000 -s $i | scr/MS/sample_stats > results/Ind62_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 124 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind62_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind62")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "MobileBay"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/MB.nulldist", delim = "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/MB.nulldist", delim = "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+    arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+
+```
+
+
+**Apalachicola Bay**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 44 individuals (48 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 88 1000 -s $i | scr/MS/sample_stats > results/Ind44_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 88 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind44_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind44")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "ApalachicolaBay"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/AP.nulldist", "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/AP.nulldist", "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+    arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+
+```
+
+
+**St. Johns River**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 20 individuals (40 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 40 1000 -s $i | scr/MS/sample_stats > results/Ind20_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 40 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind20_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind20")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "StJohnsRiver"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/STJ.nulldist", "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/STJ.nulldist", "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r fig.height=8, fig.width=15}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+    arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+)
+
+```
+
+
+**Charleston Harbor**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 18 individuals (36 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 36 1000 -s $i | scr/MS/sample_stats > results/Ind18_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 36 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind18_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind18")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "CharlestonHarbor"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/CH.nulldist", delim = "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/CH.nulldist", delim = "\t")
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+    arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D."
+
+)
+
+```
+
+
+**Winyah Bay**
+
+Simulate 1000 independent replicates (loci) for 1 - 36 segregating sites under neutral model for 18 individuals (36 observations) for no population expansion and for population expansion for alpha = 5, 10, 30, 90.
+
+```{bash eval=FALSE, echo=TRUE}
+
+# simulated neutral loci
+for i in {1..36}
+do
+
+  scr/MS/ms 36 1000 -s $i | scr/MS/sample_stats > results/Ind18_Sites${i}_a0_Rep1000.stats
+
+done
+
+# simulated neutral loci with population expansion for alpha
+for a in 5 10 30 90
+do
+
+  for i in {1..36}
+  do
+
+    scr/MS/ms 36 1000 -s $i -G $a | scr/MS/sample_stats > results/Ind18_Sites${i}_a${a}_Rep1000.stats
+
+  done
+
+done
+
+```
+
+Import results to compare null distribution of Tajima's D for each locus according to number of segregating sites.
+
+```{r fig.height=15, fig.width=15, message=FALSE, warning=FALSE}
+
+# create a vector of stats files based on simulations
+filenames <- list.files(path = "results/", pattern = "Ind18")
+
+# create an empty list that will serve as a container to receive the incoming files
+sim <-list()
+
+# create a loop to read in your data
+for (i in 1:length(filenames)){
+
+  sim[[i]] <- read_delim(file.path("results", filenames[i]), delim = "\t",
+                         col_names = c("t1", "pi",
+                                       "t2", "seg_sites",
+                                       "t3", "tajima_d",
+                                       "t4", "thetaH",
+                                       "t5", "H")) %>%
+    select(pi, seg_sites, tajima_d, thetaH, H)
+
+}
+
+# add names
+names(sim) <- filenames
+
+# combine into dataframe
+sim <- ldply(sim, data.frame) %>%
+  rename(simulation = `.id`) %>%
+  separate(simulation, into = c("temp", "t1"), sep = -6) %>%
+  separate(temp, into = c("N_IND", "t2", "ALPHA", "N_REPS"), sep = "_") %>%
+  mutate(N_REPS = as.numeric(str_extract(N_REPS, "[[:digit:]]+")),
+         N_IND = as.numeric(str_extract(N_IND, "[[:digit:]]+")),
+         ALPHA = as.numeric(str_extract(ALPHA, "[[:digit:]]+"))) %>%
+  select(-t1, -t2)
+
+
+# set up to run in parallel
+library(parallel)
+library(foreach)
+library(doMC)
+
+# set number of cores to run in parallel
+registerDoMC(50)
+
+reps <- 1000
+
+# group to be compared
+grp <- "WinyahBay"
+
+# population growth (alpha)
+alpha <- c(0, 5, 10, 30, 90)
+
+# get counts for number of segregating sites
+emp <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites) %>%
+  filter(!seg_sites == 0 & seg_sites < 35) %>%
+  filter(pop == grp) %>%
+  count(seg_sites)
+
+null_distributions <- list()
+
+for(a in alpha) {
+
+  # replicate draws to match distribution in parallel
+  results <- foreach(i = 1:reps) %dopar% {
+  sim_data <- list()
+
+    for (s in emp$seg_sites) {
+
+      # determine number of loci with s segregating  sites
+      t <- emp %>%
+        filter(seg_sites == s)
+
+      n_loci <- t$n
+
+     # sample n_loci simulated loci (with replacement)
+     sim_data[[s]] <- sim %>%
+        filter(ALPHA == a) %>%
+        filter(seg_sites == s) %>%
+        sample_n(size = n_loci, replace = TRUE) %>%
+        mutate(data_set = paste("sim_", as.character(i), sep = ""))
+
+    }
+
+  sim_data <- ldply(sim_data, data.frame) %>%
+  select(seg_sites, ALPHA, tajima_d, data_set)
+
+  }
+
+  null_distributions[[as.character(a)]] <- ldply(results, data.frame)
+
+}
+
+null_distributions <- ldply(null_distributions, data.frame) %>%
+  select(-`.id`)
+
+write_delim(null_distributions, "results/WB.nulldist", delim = "\t")
+
+```
+
+Create simulated data set based on empirical data set, i.e. determine number of loci with 1 ... x segregating sites, then randomly draw that number of loci from simulated data set for each class of segregating loci for neutral loci w/no population growth.
+
+```{r fig.cap="Cumulative distribution of Tajima's D for empirical and simulated data sets for a range of population expansion values.", fig.height=4, fig.width=5}
+
+null_distributions <- read_delim("results/WB.nulldist", delim = "\t")
+
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d) %>%
+  filter(!seg_sites == 0 & seg_sites < 35,
+         pop == grp) %>%
+  mutate(data_set = "empirical") %>%
+  bind_rows(null_distributions) %>%
+  mutate(data_type = ifelse(data_set == "empirical", "empirical", "simulated"),
+         ALPHA = as.character(ALPHA),
+         ALPHA = ifelse(is.na(ALPHA), "empirical", ALPHA),
+         ALPHA = ordered(ALPHA, levels = c("0", "5", "10", "30", "90", "empirical")))
+
+ggplot(taj, aes(tajima_d, group = ALPHA, color = ALPHA)) +
+  stat_ecdf(size = 1) +
+  geom_hline(yintercept = 0.5, color = "darkblue", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  scale_color_manual(values = c("darkgreen", "gold", "orange", "red", "darkred", "black")) +
+  labs(x = "Tajima's D", y = "cumulative distribution") +
+  theme_standard
+
+```
+
+Compare distributions of empirical and simulated data sets to determine if parameters describing the empirical distributions is significantly larger or smaller than the simulated null distribution.
+
+```{r}
+
+param <- taj %>%
+  group_by(ALPHA, data_set) %>%
+  summarise(mean = mean(tajima_d),
+            std = sd(tajima_d),
+            SE = std.error(tajima_d),
+            quantile_10 = quantile(tajima_d, 0.1, na.rm=TRUE),
+            quantile_25 = quantile(tajima_d, 0.25, na.rm=TRUE),
+            median = median(tajima_d),
+            quantile_75 = quantile(tajima_d, 0.75, na.rm=TRUE),
+            quantile_90 = quantile(tajima_d, 0.90, na.rm=TRUE)) %>%
+  gather(key = PARAM, value = VALUE, 3:10) %>%
+  ungroup()
+
+
+# number of permutations
+nperm <- 1000
+
+# parameters to assess p-value for
+stats <- unique(param$PARAM)
+
+# values for alpha (population growth parameter)
+alpha <- c(0, 5, 10, 30, 90)
+
+# dataframe for results
+sign <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), 
+                    c("ALPHA", "PARAM", "OBS", "SIM", "PVALsmaller", "PVALlarger")) %>%
+  mutate(ALPHA = as.character(ALPHA),
+         PARAM = as.character(PARAM),
+         OBS = as.numeric(OBS),
+         SIM = as.numeric(SIM),
+         PVALsmaller = as.numeric(PVALsmaller),
+         PVALlarger = as.numeric(PVALlarger))
+
+for(p in stats) {
+
+  for(a in alpha) {
+
+    # observed parameters
+    obs <- param %>%
+      filter(data_set == "empirical",
+             PARAM == p)
+
+    # simulated parameters
+    sim <- param %>%
+      filter(ALPHA == a,
+             PARAM == p)
+
+    # count number of times simulated value < observed value
+    obs_value <- obs$VALUE
+
+    smaller <- sim %>%
+      filter(VALUE < obs_value) %>%
+      nrow()
+
+    # count number of times simulated value > observed value
+    obs_value <- obs$VALUE
+
+    larger <- sim %>%
+      filter(VALUE > obs_value) %>%
+      nrow()
+
+    temp <- obs %>%
+      select(PARAM, VALUE) %>%
+      rename(OBS = VALUE) %>%
+      mutate(SIM = mean(sim$VALUE),
+             PVALsmaller = smaller/nperm,
+             PVALlarger = larger/nperm,
+             ALPHA = as.character(a))
+
+    sign <- bind_rows(sign, temp)
+
+  }
+
+}
+
+kable(
+  sign %>%
+    arrange(ALPHA),
+  caption = "Summary statistics of the distribution of Tajima's D.")
+
+```
+
+
+## Locus-by-locus comparison.
+
+Calculates two p-values: (1) p-value assuming that $D$ follows a normal distribution with mean zero and variance one (normal), (2) p-value assuming that $D$ follows a beta distribution after rescaling on [0, 1] following Tajima 1989. Beta distribution is known to be overly conservative (i.e. fails to reject null hypothesis even when selection is occuring). The alternative is to simulate a null distribution for neutral loci using e.g. coalescent theory.
+
+```{r}
+
+taj <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, tajima_d, tajima_pval_beta) %>%
+  filter(seg_sites < 35 & !seg_sites == 0) %>%
+  group_by(locus) %>%
+  mutate(padj = p.adjust(tajima_pval_beta, method = "fdr")) %>%
+  mutate(pop = ordered(pop, levels = c("SanAntonioBay", "SabineLake",
+                                       "BaratariaBay", "WestMississippiSound", "MobileBay",
+                                       "ApalachicolaBay",
+                                       "StJohnsRiver",
+                                       "CharlestonHarbor", "WinyahBay")))
+
+outl <- taj %>%
+  filter(tajima_pval_beta < 0.05) %>%
+  mutate(TYPE = ifelse(tajima_d > 0, "POSITIVE", "NEGATIVE")) %>%
+  group_by(locus, TYPE) %>%
+  count() %>%
+  ungroup()
+
+both <- outl %>%
+  count(locus) %>%
+  filter(n > 1)
+
+pos <- outl %>%
+    filter(TYPE == "POSITIVE")
+
+neg <- outl %>%
+    filter(TYPE == "NEGATIVE")
+
+# after adjusting
+outl_adj <- taj %>%
+  filter(padj < 0.05) %>%
+  mutate(TYPE_adj = ifelse(tajima_d > 0, "POSITIVE", "NEGATIVE")) %>%
+  group_by(locus, TYPE_adj) %>%
+  count() %>%
+  ungroup()
+
+both_adj <- outl_adj %>%
+  select(locus) %>%
+  count(locus) %>%
+  filter(n > 1)
+
+pos_adj <- outl_adj %>%
+    filter(TYPE_adj == "POSITIVE")
+
+neg_adj <- outl_adj %>%
+    filter(TYPE_adj == "NEGATIVE")
+
+```
+
+A total of `r length(unique(outl$locus))` (`r length(unique(outl_adj$locus))` after adjustment) loci were flagged as outlier in at least one estuary, `r nrow(pos)` (`r nrow(pos_adj)` after adjustment) loci were flagged as a positive outlier in at least one estuary, `r nrow(neg)` (`r nrow(neg_adj)` after adjustment) loci as negative outlier. A total of `r nrow(both)` (`r nrow(both_adj)` after adjustment) loci were flagged as both positive and negative outlier multiple estuaries.
+
+Identify the number of loci that were flagged as negative and positive outlier in each estuary.
+
+```{r}
+
+kable(
+  taj %>%
+    filter(tajima_pval_beta < 0.05) %>%
+    mutate(TYPE = ifelse(tajima_d > 0, "POSITIVE", "NEGATIVE")) %>%
+    group_by(pop) %>%
+    count(TYPE) %>%
+    ungroup() %>%
+    rename(Estuary = pop) %>%
+    spread(key = TYPE, value = n),
+  caption = "Number of loci flagged as significant positive or negative outlier per estuary."
+)
+
+```
+
+Compare after adjusting per estuary.
+
+```{r}
+
+kable(
+  taj %>%
+    filter(padj < 0.05) %>%
+    mutate(TYPE = ifelse(tajima_d > 0, "POSITIVE", "NEGATIVE")) %>%
+    group_by(pop) %>%
+    count(TYPE) %>%
+    ungroup() %>%
+    rename(Estuary = pop) %>%
+    spread(key = TYPE, value = n),
+  caption = "Number of loci flagged as significant positive or negative outlier per estuary after adjusting by estuary."
+)
+
+
+```
+
+
+Identify loci that have been previously mapped on the linkage map to identify patterns of clustering if present.
+
+*Distribution of Tajima's D per locus calculated for individuals within each estuary across the genome. Loci flagged as significant outlier compared to the expected null distribution under equilibrium are indicated in red.*
+
+```{r fig.width=13, fig.height=26, fig.fullwidth=TRUE}
+
+outl <- taj %>%
+  mutate(TYPE = ifelse(tajima_pval_beta < 0.05, "OUTLIER", "NEUTRAL")) %>%
+  mutate(label = case_when(pop == "ApalachicolaBay" ~ "AP",
+                           pop == "BaratariaBay" ~ "BB",
+                           pop == "CharlestonHarbor" ~ "CH",
+                           pop == "EastMississippiSound" ~ "EMS",
+                           pop == "GalvestonBay" ~ "GB",
+                           pop == "MatagordaBay" ~ "MAT",
+                           pop == "MobileBay" ~ "MB",
+                           pop == "SabineLake" ~ "SL",
+                           pop == "SanAntonioBay" ~ "SA",
+                           pop == "SanteeRivers" ~ "SR",
+                           pop == "StHelenSound" ~ "SHS",
+                           pop == "StJohnsRiver" ~ "SJR",
+                           pop == "Stono-NorthEdistoRivers" ~ "ST",
+                           pop == "WestMississippiSound" ~ "WMS",
+                           pop == "WinyahBay" ~ "WB"))
+
+
+# locate loci having been flagged in at least one estuary on map
+map <- read_table2("data/POPGEN/SFL.map") %>%
+  mutate(locus = str_sub(LOCUS, 2)) %>%
+  left_join(outl) %>%
+  filter(!is.na(TYPE))
+
+ggplot(map, aes(x = POS, y = tajima_d, color = TYPE)) +
+  geom_point(shape = 1) +
+  geom_hline(yintercept = 0, color = "black", linetype = "dashed") +
+  facet_grid(label ~ LG, scales = "free") +
+  scale_color_manual(values = c("grey75", "red")) +
+  labs(x = "position linkage group", y = "Tajima's D") +
+  theme_facet
+
+outl_mapped <- map %>%
+  filter(TYPE == "OUTLIER") %>%
+  distinct(locus)
+
+```
+
+A total of `r nrow(outl_mapped)` loci flagged as significant outlier in at least one estuary were located on the map.
+
+## Comparison of long-term effective populations size using the population-scaled mutation rate $\theta$
+
+$\theta = 4N_{e}\mu$ is the population-scaled mutation rate, with $\mu$ = mutation rate per bp per generation. Because of its relationship to the long-term effective population size it can be used as a proxy for $N_{e}$ to understand the effects of drift. When $N_{e}$ and $\mu$ are unknown, $\theta$ can be estimated on a locus-per-locus basis as $\hat{\theta}_W$ using the number of segregating sites (observed nucleotide diversity $S$) or as $\theta_{T}$ based on pairwise differences among haplotypes (nucleotide diversity $\pi$).
+
+
+**Watterson's estimator (segregating sites)**
+
+Watterson's estimator $\theta_{W}$ [@Watterson1975] is an empirical way to measure genetic variation based on the number of segregating sites in a locus (observed nucleotide diversity). Despite the fact that estimates of $\theta_{W}$ is biased for loci under selection and by population expansion it can be used as a proxy for relative differences in long-term effective population Ne size among populations even when a genome is not in equilibrium due to the theoretical relationship of $\theta$ and Ne ($\theta = 4N_{e}\mu$).
+
+Compare differences in distribution of $\theta_{W}$ across all loci among estuaries.
+
+```{r fig.cap="Distribution of theta W per estuary.", fig.height=4, fig.width=9}
+
+theta <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, seg_sites, thetaS) %>%
+  mutate(pop = ordered(pop, levels = c("SanAntonioBay", "SabineLake",
+                                       "BaratariaBay", "WestMississippiSound", "MobileBay",
+                                       "ApalachicolaBay",
+                                       "StJohnsRiver",
+                                       "CharlestonHarbor", "WinyahBay"))) %>%
+  filter(seg_sites < 35) %>%
+  mutate(OCEAN = ifelse(pop %in% c("ATL",
+                                   "SWATL", "MATL",
+                                   "FLA", "SC",
+                                   "StJohnsRiver",
+                                   "StHelenSound", "Stono-NorthEdistoRivers", "CharlestonHarbor", "SanteeRivers", "WinyahBay"), "ATL",
+                        ifelse(pop == "ALL", "OVERALL", "GULF")))
+
+ggplot(theta, aes(x = pop, y = thetaS, fill = OCEAN)) +
+  geom_boxplot() +
+  scale_fill_manual(values = col_oceans) +
+  labs(x = "", y = "Theta W") +
+  coord_flip() +
+  theme_standard
+
+means <- theta %>%
+  group_by(pop) %>%
+    summarize(mean = mean(thetaS),
+              std = sd(thetaS),
+              max = max(thetaS),
+              min = min(thetaS)) %>%
+    ungroup()
+
+kable(
+  means,
+  caption = "Comparison of mean +/- standard deviation, minimum, and maximum values of theta W across loci among estuaries."
+)
+
+```
+
+Mean values of $\theta_{W}$ are lower are lower in estuaries of the Atlantic compared to the Gulf of Mexico, implying that long-term effective population sizes are larger in Gulf estuaries compared to estuaries in the Atlantic.
+
+Test for significant differences among ocean basins using a Mann-Whitney test (unpaired two-samples Wilcoxon test/Wilcoxon rank sum test).
+
+```{r}
+
+comp <- means %>%
+  select(pop, mean) %>%
+  mutate(OCEAN = ifelse(pop %in% c("StJohnsRiver", "CharlestonHarbor", "WinyahBay"), "ATL", "GULF"))
+
+wilcox.test(mean ~ OCEAN, data = comp, exact = FALSE)
+
+```
+
+
+**Nucleotide diversity $\pi$ (pairwise differences)**
+
+$\theta_{T}$ [@Nei1987] is calculated as the sum of the number of differences between pairs of haplotypes of a given locus divided by the number of comparisons made. This parameter is baised towards allele segregating at intermediate rates.
+
+Compare differences in distribution of $\theta_{T}$ across all loci among estuaries.
+
+```{r fig.cap="Distribution of theta T across all loci among estuaries.", fig.height=4, fig.width=9}
+
+theta <- read_delim("results/hap_div_est", delim = "\t") %>%
+  select(locus, pop, nuc_div, seg_sites) %>%
+  mutate(pop = ordered(pop, levels = c("SanAntonioBay", "SabineLake",
+                                       "BaratariaBay", "WestMississippiSound", "MobileBay",
+                                       "ApalachicolaBay",
+                                       "StJohnsRiver",
+                                       "CharlestonHarbor", "WinyahBay"))) %>%
+  filter(seg_sites < 35) %>%
+  mutate(OCEAN = ifelse(pop %in% c("ATL",
+                                   "SWATL", "MATL",
+                                   "FLA", "SC",
+                                   "StJohnsRiver",
+                                   "StHelenSound", "Stono-NorthEdistoRivers", "CharlestonHarbor", "SanteeRivers", "WinyahBay"), "ATL",
+                        ifelse(pop == "ALL", "OVERALL", "GULF")))
+
+ggplot(theta, aes(x = pop, y = nuc_div, fill = OCEAN)) +
+  geom_boxplot() +
+  scale_fill_manual(values = col_oceans) +
+  labs(x = "", y = "Theta T") +
+  coord_flip() +
+  theme_standard
+
+means <- theta %>%
+  group_by(pop) %>%
+    summarize(mean = mean(nuc_div),
+              std = sd(nuc_div),
+              max = max(nuc_div),
+              min = min(nuc_div)) %>%
+    ungroup()
+
+kable(
+  means,
+  caption = "Comparison of mean +/- standard deviation, minimum, and maximum values of the nucleotide diversity (pi) across loci among estuaries."
+)
+
+```
+
+Mean values of $\theta_{T}$ are lower are marginally lower in estuaries of the Atlantic compared to the Gulf of Mexico, implying that long-term effective population sizes are larger in Gulf estuaries compared to estuaries in the Atlantic.
+
+Test for significant differences among ocean basins using a Mann-Whitney test (unpaired two-samples Wilcoxon test/Wilcoxon rank sum test).
+
+```{r}
+
+comp <- means %>%
+  select(pop, mean) %>%
+  mutate(OCEAN = ifelse(pop %in% c("StJohnsRiver", "CharlestonHarbor", "WinyahBay"), "ATL", "GULF"))
+
+wilcox.test(mean ~ OCEAN, data = comp, exact = FALSE)
+
+```
+
+
+# Landscape Genetics
+
+Redundancy analyses (RDA), as implemented in `vegan` [@Oksanen2013], was used to assess the influence of geographic distance and of variable environmental parameters and their interaction on observed patterns of genomic variation among samples from the Gulf. RDA was not carried out among samples from the Atlantic because of limited geographic spread.
+
+RDA is a constrained ordination method that extracts and summarizes components of variation in a multidimensional data set explained by a set of explanatory variables. Its purpose is to parse and visualize components of genomic variation (response variables) that are explained by geography and/or environment (explanatory variables) and to identify alleles/loci driving an observed pattern. While applying it in this way were multiple individuals from the same location are assigned the same values for spatial and environmental variables may result in some bias due to pseud-replication, not transferring the response variables to a sample level, for example using a correspondance analysis allows for the application of the RDA as an association approach when using genomic data that may not rely on equilibrium assumptions present in $F_{ST}$-based analyses [@Forester2018]. The R2 value obtained is equivalent to the proportion of genomic variation explained by explanatory variables, allowing for a comparison of the relative importance of the variables and their interaction.
+
+## Format matrices and select best models
+
+**Response variables: Genotype data**
+
+Format response variables (genetic data) as allele counts per individual. 
+
+RDA requires a complete data set. Replace missing values with mean allele frequency, then extract allele counts per individual.
+
+```{r}
+
+setPop(gen) <- ~ESTUARY
+
+gen_est <- seppop(gen)
+
+# select individuals from estuaries
+gen_rda <- gen_est[c("MobileBay", "EastMississippiSound", "ApalachicolaBay", "BaratariaBay",
+                   "WestMississippiSound", "SabineLake", "GalvestonBay", "MatagordaBay", "SanAntonioBay")] %>%
+  repool()
+
+# replace missing data
+nomissing <- missingno(gen_rda, type = "mean")
+
+# extract allele counts
+allelecount <- as.data.frame(tab(nomissing))
+
+```
+
+
+**Constraining matrix: Coastal distance (spatial impacts)**
+
+Geographic distance was measured as approximate coastline distance. For coastal fish species coastal distance more appropriate parameterization of geography as relationship might not be linear.
+
+Format parameters to create spatial matrix by calculating polynomials (10th degree) geographic distance to fit trend surface. To reduce effects of pseudo-replication, jitter distance.
+
+```{r}
+
+# ensure that geographic matrix is in the same sequence as genetic matrix
+Inds <- as.data.frame(indNames(gen_rda)) %>%
+   rename(LIB_ID = `indNames(gen_rda)`) %>%
+   separate(LIB_ID, into = c("POP", "WELL", "SAMPLE_ID"), sep = "-", remove = FALSE, extra = "merge") %>%
+   select(-POP)
+
+dist <- read_delim("data/ENV/coastal_distance.txt", delim = "\t") %>%
+  rename(ESTUARY = Estuary,
+         DIST = Value) %>%
+  select(ESTUARY, DIST) 
+
+xy <- Inds %>%
+  left_join(SampleInfo) %>%
+  left_join(dist) %>%
+  select(DIST) %>%
+  mutate(DIST_jitter = jitter(DIST))
+
+# calculate 3rd degree polynomials
+DIST <- as.data.frame(poly(xy$DIST, degree = 3)) %>%
+  rename(DIST_X1 = `1`,
+         DIST_X2 = `2`,
+         DIST_X3 = `3`)
+
+xy <- bind_cols(xy, DIST)
+
+```
+
+Select best model for spatial variables (coastal distance) using forward model selection and permutation tests (999 permutations).
+
+```{r echo=TRUE}
+
+# run initial rda
+rda.xy = rda(allelecount ~ ., data.frame(xy), scale = FALSE)
+
+# forward selection of spatial variables
+stp.xy = ordiR2step(rda(allelecount ~ 1, data.frame(xy)),
+                   scope = formula(rda.xy),
+                   R2scope = FALSE,
+                   scale = FALSE,
+                   Pin = 0.15,
+                   direction="forward",
+                   R2permutations = 999,
+                   parallel = 45)
+
+selected_xy <- attributes(stp.xy$terms)$term.labels
+
+```
+
+Selected parameters for the best model is `r knitr::combine_words(attributes(stp.xy$terms)$term.labels)`.
+
+
+**Constraining matrix: Environmental differences among estuaries**
+
+Data for 39 environmental parameters for each of the sample locations in the Gulf were obtained from the National Estuary Eutrophication Assessment database [@NEAA2018]. Parameters were then PCA-transformed, resulting in new synthetic variables summarizing environmental differences among estuaries. Forward selection of variables was performed on the synthetic variables to identify the best model of environmental variables and based on the results, the PC were used as the constraining matrix for the final RDA; significance was determined using 1,000 permutations.
+
+Import environmental data from National Estuary Eutrophication Assessment to use as environmental predictors.
+
+```{r}
+
+NEEA <- read_delim("data/ENV/NEEA_for_PCA.txt", delim = "\t")
+
+```
+
+Parameters in data set include `r knitr::combine_words(unique(NEEA$Parameter))`.
+
+Select environmental information for estuaries that have been sampled and perform PCA on scaled parameters.
+
+```{r fig.cap="Scree plot indicating percent variance summarized by each principle component.", fig.width = 5, fig.height = 5}
+
+estuaries <- gen_rda@strata %>%
+  select(ESTUARY) %>%
+  distinct() %>%
+  left_join(NEEA, by = c("ESTUARY" = "Estuary")) %>%
+  spread(key = Parameter, value = Value, convert = TRUE, drop = TRUE) %>%
+  column_to_rownames("ESTUARY")
+
+pca <- prcomp(x = estuaries,
+              scale. = TRUE, center = TRUE)
+
+eig <- as.data.frame(pca$sdev) %>%
+  rename(EIGENVALUE = `pca$sdev`) %>%
+  rownames_to_column("PC") %>%
+  mutate(PC = as.numeric(PC),
+         VARIANCE = round(EIGENVALUE/sum(EIGENVALUE)*100, digits = 2))
+
+ggplot(eig, aes(x = PC, y = VARIANCE)) +
+  geom_bar(stat = "identity", color = "black", fill = "darkorange") +
+  labs(x = "Principle Component", y = "% variance") +
+  theme_standard
+
+env_pca_all <- as.data.frame(pca$x) %>%
+  rownames_to_column("ESTUARY") %>%
+  left_join(geog_names, by = "ESTUARY") %>%
+  mutate(ESTUARY = ordered(ESTUARY, levels = estuaries_gulf))
+
+write_delim(env_pca_all, "results/pca_env_all", delim = "\t")
+
+```
+
+PCA transform all significant environmental parameters and select model through forward selection using adjusted R2 as the stopping criterion.
+
+```{r}
+
+env <- gen_rda@strata %>%
+  select(LIB_ID, ESTUARY) %>%
+  mutate(ESTUARY = as.character(ESTUARY)) %>%
+  left_join(env_pca_all) %>%
+  select(-ESTUARY, -REGION, -OCEAN, -POP) %>%
+  column_to_rownames("LIB_ID")
+
+# run initial rda
+rda.env <- rda(allelecount ~ ., env, scale = FALSE)
+
+# forward selection of spatial variables
+stp.env <- ordiR2step(rda(allelecount ~ 1, env),
+                   scope = formula(rda.env),
+                   R2scope = FALSE,
+                   scale = FALSE,
+                   Pin = 0.1,
+                   direction="forward",
+                   Random.seed = 42,
+                   R2permutations = 999,
+                   parallel = 45)
+
+# model chosen by functions
+selected_env <- attributes(stp.env$terms)$term.labels
+
+```
+
+Selected parameters are `r knitr::combine_words(attributes(stp.env$terms)$term.labels)`.
+
+```{r fig.cap="Biplot of principal component analysis for selected PCs of environmental parameters for estuaries in the Western Gulf, central Gulf, and eastern Gulf.", fig.height=10, fig.width=9}
+
+ggplot(env_pca_all, aes(x = PC8, y = PC4, fill = ESTUARY)) +
+  geom_vline(xintercept = 0, color = "black", linetype = "dashed") +
+  geom_hline(yintercept = 0, color = "black", linetype = "dashed") +
+  geom_point(color = "black", size = 7, shape = 21) +
+  scale_fill_manual(values = col_estuaries) +
+  labs(x = glue("PC 8 ({filter(eig, PC == 8) %>%pull(VARIANCE)}%)"),
+       y = glue("PC 4 ({filter(eig, PC == 8) %>%pull(VARIANCE)}%)")) +
+  theme_standard +
+  theme(legend.position = "bottom") +
+  guides(fill = guide_legend(nrow = 3, override.aes = list(size = 2)))
+
+```
+
+Compare loadings on of variables on selected principle components
+
+```{r fig.cap="Loading of all environmental parameters on selected principle components, PC8 and PC4.", fig.width=9, fig.height=20}
+
+# plot variables on PC8
+tmp <- as.data.frame(pca$rotation) %>%
+  rownames_to_column("PARAMETER") %>%
+  select(PARAMETER, PC8) %>%
+  mutate(LOADING = PC8*PC8) %>%
+  arrange(desc(LOADING)) %>%
+  mutate(PARAMETER = factor(PARAMETER, unique(PARAMETER)))
+
+p1 <- ggplot(tmp, aes(x = LOADING, y = PARAMETER)) +
+  geom_segment(aes(x = 0, xend = LOADING, y = PARAMETER, yend = PARAMETER)) +
+  geom_vline(xintercept = 0) +
+  geom_point(shape = 21, size = 3, color = "black", fill = "darkorange") +
+  scale_fill_viridis_c() +
+  coord_flip() +
+  labs(x = "Loading PC8", y = "environmental variable") +
+  theme_facet +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+# plot variables on PC4
+tmp <- as.data.frame(pca$rotation) %>%
+  rownames_to_column("PARAMETER") %>%
+  select(PARAMETER, PC4) %>%
+  mutate(LOADING = PC4*PC4) %>%
+  arrange(desc(LOADING)) %>%
+  mutate(PARAMETER = factor(PARAMETER, unique(PARAMETER)))
+
+p2 <- ggplot(tmp, aes(x = LOADING, y = PARAMETER)) +
+  geom_segment(aes(x = 0, xend = LOADING, y = PARAMETER, yend = PARAMETER)) +
+  geom_vline(xintercept = 0) +
+  geom_point(shape = 21, size = 3, color = "black", fill = "darkorange") +
+  scale_fill_viridis_c() +
+  coord_flip() +
+  labs(x = "Loading PC4", y = "environmental variable") +
+  theme_facet +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+multiplot(p1, p2, cols = 1)
+
+```
+
+## Variance Partitioning
+
+Variance partitioning was used to compare the contribution of geographic distance and variation in the environmental differences to explain the observed genomic variation. A full model, using selected geographic and environmental variables, a partial model, using geographic data conditioned on environmental variables, and a partial model, using environmental data conditioned on geographic data, were considered to partition the explainable variance into individual (geography or environment) and shared components (geography plus environment), using `vegan`. Significance of each component was tested using 1,000 permutations.
+
+Partition variance to determine if geographic location or environmental data driving observed pattern(s).
+
+* full model: geographic + environmental variables
+* partial model I: geographic data explain genetic data conditioned on environmental variables
+* partial model II: environmental data explain genetic data conditioned on geographic data
+
+Partition the explainable variance (i.e. total inertia for constrain matrix of full model): determine total, constrained, unconstrained values of inertia/proportion of total inertia (variance).
+
+
+**Full model**
+
+Perform RDA for all variables (spatial and environmental; full model).
+
+```{r}
+
+# spatial matrix
+xy.mat <- xy %>%
+  select(one_of(selected_xy)) %>%
+  as.matrix()
+
+# environmental matrix
+env.mat <- gen_rda@strata %>%
+  select(LIB_ID, ESTUARY) %>%
+  mutate(ESTUARY = as.character(ESTUARY)) %>%
+  left_join(env_pca_all) %>%
+  select(LIB_ID, one_of(selected_env)) %>%
+  column_to_rownames("LIB_ID") %>%
+  as.matrix(env)
+
+# overall model
+rda.all <- rda(allelecount ~ xy.mat + env.mat, scale = FALSE)
+
+rda.all
+
+```
+
+The proportion of variance explained by constrained PCA (rda) is `r round(RsquareAdj(rda.all)$r.squared, digits = 3)*100`%,  adjusted R2 value is `r RsquareAdj(rda.all)$adj.r.squared`
+
+```{r}
+
+# Test significance of overall model
+sig_overall_all <- anova.cca(rda.all,
+                   permutations = 999,
+                   parallel = 45)
+
+kable(
+  sig_overall_all,
+  caption = "Significance of overall model (costal distance + environment)"
+)
+
+pval_overall_all <- sig_overall_all$`Pr(>F)`[1]
+
+kable(
+  summary(eigenvals(rda.all, model = "constrained")),
+  caption = "Proportion of variance explained by each RDA axis."
+)
+
+```
+
+The overall model is significant (P = `r pval_overall_all`).
+
+Partition the variation in genetic data into components accounted for by environmental and spatial variables and their combined effect using adjusted R squared to assess partitions explained by explanatory tables and their combinations.
+
+```{r echo=TRUE}
+
+# Partition the variance ====
+vpart.all <- varpart(allelecount, ~ xy.mat, ~ env.mat)
+
+```
+
+Extract fraction explained by each component:
+
+```{r}
+
+vpart.all
+
+```
+
+
+* a+b: variation explained by spatial variables (independent/marginal effect, i.e. variation explained if spatial variables only explanatory variables).
+* b+c: variation explained by environmental variables (marginal effect of environmental variables).
+* a+b+c: variation explained by X1 (spatial variables), X2 (environmental variables), and shared effect of X1 + X2 (i.e. result of correlation between both sets of variables)
+* a: conditioned/partial variation explained by X1 (spatial variables)
+* b: shared variation explained by X1 (spatial variables) and X2 (environmental variables); cannot be attributed to one or the other (i.e. result of correlation between both sets of variables).
+* c: conditioned/partial variation explained by X2 (environmental variables)
+* d: residual (unexplained)
+
+
+Test significance of all components using permuted p-values.
+
+```{r}
+
+# adjusted R squared for each component
+partitions <- c("xy+shared", "env+shared", "xy+env+shared", "xy", "shared", "env", "residuals")
+
+all_values <- c(vpart.all$part$fract$Adj.R.squared, vpart.all$part$indfract$Adj.R.squared)
+
+# Test significance of individual fractions ====
+all_pvals <- c()
+
+# Significance of xy + shared
+sig_geo_shared_all <- anova.cca(rda(allelecount, xy.mat),
+                                permutations = 999, parallel = 55)
+
+all_pvals[1] <- sig_geo_shared_all$`Pr(>F)`[1]
+
+# Significance of env + shared
+sig_env_shared_all <- anova.cca(rda(allelecount, env.mat),
+                                permutations = 999, parallel = 55)
+
+all_pvals[2] <- sig_env_shared_all$`Pr(>F)`[1]
+
+# Significance of xy + shared + env
+exp_vars <- cbind(env.mat, xy.mat)
+
+sig_geo_shared_env_all <- anova.cca(rda(allelecount, exp_vars),
+                                    permutations = 999, parallel = 55)
+
+all_pvals[3] <- sig_geo_shared_env_all$`Pr(>F)`[1]
+
+# Significance of xy
+sig_geo_all <- anova.cca(rda(allelecount, xy.mat, env.mat),
+                         permutations = 999, parallel = 55)
+
+all_pvals[4] <- sig_geo_all$`Pr(>F)`[1]
+
+# Significance of shared fraction is untestable
+all_pvals[5] <- NA
+
+# Significance of env
+sig_env_all <- anova.cca(rda(allelecount, env.mat, xy.mat),
+                         permutations = 999, parallel = 55)
+
+all_pvals[6] <- sig_env_all$`Pr(>F)`[1]
+
+# Significance of residual fraction is untestable
+all_pvals[7] <- NA
+
+# combine into single table
+partition_sign <- data.frame(partitions, all_values, all_pvals) %>%
+  rename(PARTITION = partitions,
+         VARIANCE = all_values,
+         PVAL = all_pvals) %>%
+  arrange(desc(VARIANCE))
+
+
+kable(
+  partition_sign,
+  caption = "Variance partitioning of variance explained by coastal distance (xy), environmental variables (env), and shared effects due to correlation of xy and env."
+)
+
+```
+
+
+## Clustering of individuals
+
+Compare distribution of individuals using weighted average individual scores. WA are weighted averages of allele scores that are as similar to linear combinations (LC) scores as possible. Weights are site (individual) totals of species (loci). To determine how well explanatory variables separate groups of individuals or if explanatory variables can be used to discriminate between groups of individuals, use wa-scores (or both).
+
+```{r fig.cap="Biplot of redundancy analysis using PCA-transformed environmental variables and third polynomial of coastal distance as explanatory variables (red arrows). Individuals sampled in the Gulf (colored circles) are plotted according to their component loadings calculated as weighted average scores for individuals sampled in the Gulf.", fig.height=7, fig.width=8}
+
+# environmental variables
+comb_rda <- as.data.frame((rda.all$CCA$biplot)) %>%
+  rownames_to_column("PARAM")
+
+ind_rda.all <- rda_indv(rda.all, 4) %>%
+  left_join(strata) %>%
+  mutate(ESTUARY = ordered(ESTUARY,
+                           levels = c("SanAntonioBay", "MatagordaBay", "GalvestonBay", "SabineLake",
+                     "BaratariaBay", "WestMississippiSound", "EastMississippiSound", "MobileBay",
+                     "ApalachicolaBay")))
+
+ggplot() +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  geom_hline(yintercept = 0, color = "darkblue", linetype = "dashed") +
+  geom_label_repel(data = comb_rda, aes(x = RDA1, y = RDA2, label = PARAM)) +
+  geom_segment(data = comb_rda, aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+               arrow = arrow(length = unit(0.2, "cm")),
+               color="darkred", size = 1) +
+  geom_point(data = ind_rda.all, aes(x = RDA1_WA_SCALED3, RDA2_WA_SCALED3, fill = ESTUARY),
+             shape = 21, size = 3) +
+  scale_fill_manual(values = col_estuaries) +
+  labs(x = "RDA1", y = "RDA2") +
+  theme_standard +
+  theme(legend.position = "bottom")
+
+```
+
+Run environmental model on its own (equivalent to env + shared in variance partitioning).
+
+```{r}
+
+env <- gen_rda@strata %>%
+  select(LIB_ID, ESTUARY) %>%
+  mutate(ESTUARY = as.character(ESTUARY)) %>%
+  left_join(env_pca_all) %>%
+  select(LIB_ID, one_of(selected_env)) %>%
+  column_to_rownames("LIB_ID")
+
+rda.env <- rda(allelecount ~ ., data = env, scale = FALSE)
+
+rda.env
+
+```
+
+Compare clustering of individuals for environmental model.
+
+```{r fig.cap="Biplot of redundancy analysis using PCA-transformed environmental variables as explanatory variables (red arrows). Individuals sampled in the Gulf (colored circles) are plotted according to their component loadings calculated as weighted average scores for individuals sampled in the Gulf.", fig.height=7, fig.width=8}
+
+# environmental variables
+env_rda <- as.data.frame((rda.env$CCA$biplot)) %>%
+  rownames_to_column("ENV") %>%
+  mutate(RDA1_flip = -(RDA1),
+         RDA2_flip = -(RDA2))
+
+# extract individual scores
+ind_rda.env <- rda_indv(rda.env, 2) %>%
+  left_join(strata) %>%
+  mutate(ESTUARY = ordered(ESTUARY,
+                           levels = c("SanAntonioBay", "MatagordaBay", "GalvestonBay", "SabineLake",
+                     "BaratariaBay", "WestMississippiSound", "EastMississippiSound", "MobileBay",
+                     "ApalachicolaBay")))
+
+tmp <- ind_rda.env %>%
+  mutate(RDA1_WA_SCALED3_flip = -(RDA1_WA_SCALED3),
+         RDA2_WA_SCALED3_flip = -(RDA2_WA_SCALED3))
+
+# plot
+ggplot() +
+  geom_vline(xintercept = 0, color = "darkblue", linetype = "dashed") +
+  geom_hline(yintercept = 0, color = "darkblue", linetype = "dashed") +
+  geom_label_repel(data = env_rda, aes(x = RDA1_flip, y = RDA2_flip, label = ENV)) +
+  geom_segment(data = env_rda, aes(x = 0, y = 0, xend = RDA1_flip, yend = RDA2_flip),
+               arrow = arrow(length = unit(0.2, "cm")),
+               color="darkred", size = 1) +
+  geom_point(data = tmp, aes(x = RDA1_WA_SCALED3_flip, RDA2_WA_SCALED3_flip, fill = ESTUARY),
+             shape = 21, size = 3) +
+  scale_fill_manual(values = col_estuaries) +
+  labs(x = "RDA1", y = "RDA2") +
+  theme_standard +
+  theme(legend.position = "bottom")
+
+```
+
+
+## Extract highly associated loci
+
+Use the Mahalanobis distance to identify alleles with strongest associations to both RDA axes.
+
+```{r fig.cap="Allele loadings as (weighted) orthonormal scores for independent/unconstrained variables, alleles with Mahalanobis distance > 25 are indicated in red.",  fig.height=5, fig.width=5}
+
+# number of axis
+n <- 2
+
+# extract allele scores
+locus_rda.env <- rda_alleles(rda.env, n)
+
+temp <- locus_rda.env %>%
+  select(RDA1, RDA2)
+
+mah <- as.data.frame(mahalanobis(temp, colMeans(temp), cov(temp), decreasing=TRUE)) %>%
+  rownames_to_column("ALLELE_NAME") %>%
+  rename(MAH_DIST = `mahalanobis(temp, colMeans(temp), cov(temp), decreasing = TRUE)`)
+
+# add information to data frame
+locus_rda.env <- left_join(locus_rda.env, mah) %>%
+  mutate(RDA_OUTLIER = ifelse(MAH_DIST > 25, "OUTLIER", "NON_ASSOCIATED"))
+
+ggplot(locus_rda.env, aes(x = RDA1, y = RDA2, color = RDA_OUTLIER)) +
+  geom_point(shape = 21, size = 2) +
+  coord_fixed(ratio = 1) +
+  geom_vline(xintercept = 0, color = "darkred", linetype = "dashed", size = 0.5) +
+  geom_hline(yintercept = 0, color = "darkred", linetype = "dashed", size = 0.5) +
+  scale_color_manual(values = c("darkblue", "red")) +
+  theme_standard
+
+# for bivariate distribution critical value = 13.82 (p < 0.001)
+outl <- mah %>%
+  filter(MAH_DIST > 25)
+
+```
+
+A total of `r nrow(outl)` loci are flagged as significantly associated with the constraining variables (Mahalanobis distance > 25).
+
+
+**Distribution of Mahalanobis distance across the linkage map. For each locus allele with the highest Mahalanobis distance is plotted. Outlier loci are indicated in red.**
+
+```{r fig.height=4, fig.width=12, fig.fullwidth=TRUE}
+
+temp <- locus_rda.env %>%
+  select(LOCUS, MAH_DIST) %>%
+  group_by(LOCUS) %>%
+  arrange(MAH_DIST) %>%
+  top_n(n = 1) %>%
+  ungroup()
+
+map <- read_table2("data/POPGEN/SFL.map") %>%
+  mutate(LOCUS = str_sub(LOCUS, 2)) %>%
+  left_join(temp) %>%
+  filter(!is.na(MAH_DIST)) %>%
+  mutate(OUTLIER = ifelse(MAH_DIST < 25, "ASSOCIATED", "NON_ASSOCIATED"))
+
+ggplot(map, aes(x = POS, y = MAH_DIST, color = OUTLIER)) +
+  geom_point(shape = 1) +
+  geom_hline(yintercept = 0, color = "black", linetype = "dashed") +
+  facet_grid(. ~ LG, scales = "free") +
+  scale_color_manual(values = c("grey75", "red")) +
+  labs(x = "position linkage group", y = "Mahalanobis Distance") +
+  theme_facet
+
+```
+
+
+`r margin_note("Package versions used for this analysis (R 3.6.0).")`
+
+```{r}
+
+subset(data.frame(sessioninfo::package_info()), attached==TRUE, c(package, loadedversion))
+
+```
