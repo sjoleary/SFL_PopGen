@@ -1,6 +1,6 @@
 Research compendium for "**Disentangling spatial, environmental, and demographic signals in population genomics of an exploited, estuarine-dependent flatfish.**"
 
-Raw reads underlying analysis available from short read archive (SRA): BioProject XXXX/Accession XXXX.
+Raw reads underlying analysis available from short read archive (SRA): BioProject [PRJNA754841](http://www.ncbi.nlm.nih.gov/bioproject/754841).
 
 Extended methods and results can be found in:
 
